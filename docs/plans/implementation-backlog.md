@@ -31,6 +31,33 @@ Tasks:
 
 **Validation:** T01–T04 below. No hardware benchmark is required for the reader itself.
 
+## CLI follow-up — Compact progress and verbose details
+
+**Planned; no runtime behavior changed by this plan update.** Can ship independently after PR 0, before or alongside PR 1. This addresses the request for a quieter test that still shows what is happening. Reuse `--verbose`, `--quiet` and `--no-progress`; no additional `--silent` alias is needed.
+
+**Files/modules:** CLI `main.rs`; report `progress.rs`; progress event classification/call sites in core/survey where necessary; CLI/reporter tests; README and release notes.
+
+| Options | Planned running output | Completion |
+|---|---|---|
+| Default | Phase/workload/worker-mode name and elapsed/target time, approximately every five seconds; no CPU/RAM/temp/load/steal/frequency columns | Existing final report and JSON path |
+| `--verbose` | Detailed live resource statistics and existing diagnostic hashes | Final report, JSON path and verbose diagnostics |
+| `--no-progress` | Phase transitions only; no periodic live lines | Final report and JSON path |
+| `--verbose --no-progress` | Phase transitions only; no live resource lines | Final report/path and verbose diagnostics |
+| `--quiet` | No routine phase/progress output | JSON still saved; routine console report/path suppressed |
+
+Tasks:
+
+- Introduce one explicit output policy shared by the CLI and reporter; preserve the existing `--quiet`/`--verbose` conflict. `--no-progress` suppresses periodic updates even with `--verbose`.
+- Format compact samples as, for example, `Sustained combined CPU workload [31/300s]`. Keep startup/preflight, phase changes and completion visible. Classify diagnostic messages explicitly instead of parsing human-readable message strings; suppress detailed preflight load/capacity dumps in compact mode. Keep actionable warnings and errors visible with their correct exit behavior, including under `--quiet`.
+- Retain the bounded asynchronous nonblocking queue, five-second throttling and first/final sample behavior. Support plain text SSH and redirected logs without requiring a TTY or emitting ANSI control sequences.
+- Change presentation only: keep CPU workloads, sampling, durations, telemetry collection, saved JSON, score formulas and benchmark identities identical across verbosity modes. Include raw measurements in JSON even when their console columns are hidden.
+- Propagate the output policy to survey and future repeat children. The parent shows attempt/phase context without printing duplicate parent/child progress lines; repeat options remain owned by PR 1.
+- Document the default-output change in the application release notes. Bump the application release version when shipping; retain the v1 benchmark version/schema.
+
+**Done when:** captured-output tests cover every option combination above, first/final/throttled updates, a phase change, missing sensors, warnings/errors and redirected output. Feed identical synthetic measurement events through each output policy and verify unchanged saved measurements/scores; quiet must not suppress file creation or failure exit status. No hardware performance run is needed for a formatting-only change.
+
+**Current workaround:** `benchmark --no-progress` already keeps phase messages and results while hiding live statistic lines. Today `--verbose` adds hashes; it does not control whether live statistics appear.
+
 ## PR 1 — Repeat series and descriptive/inferential analysis
 
 **Depends on:** PR0. **Goal:** useful repeated measurements before changing the timed benchmark.
@@ -62,6 +89,7 @@ Tasks:
 
 - Split observed logical CPU IDs, affinity, effective cpuset, online set, quota rational, effective CPU-equivalent capacity and worker count.
 - Preserve limit scope and missing/error/unlimited distinctions. Use rational arithmetic for quota comparisons/ceil. Handle hidden ancestry conservatively.
+- Make presentation distinguish a confirmed unlimited visible cgroup limit from unavailable, unreadable and malformed observations. Do not infer unlimited from legacy v1 nulls. Label topology and capacity as guest-visible in VMs, and explain that visible guest cgroup ancestry does not establish host-side VM limits. Keep legacy JSON/scoring unchanged.
 - Parse core/sibling groups with reciprocal consistency validation; retain unknown/default topology and virtualization limits. Cache/capacity classes are context, never guessed from clock speed.
 - Implement deterministic physical-representatives-first ordering and ascending-ID fallback. Select `min(allowed_count, max(1, ceil(capacity)))` workers for v2 only.
 - Define phase-to-phase allocation change detection and the allocation signature used by repeat cohorts. Do not include changing load/frequency/temperature in that signature.

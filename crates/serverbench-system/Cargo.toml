@@ -1,0 +1,9 @@
+[package]
+name = "serverbench-system"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+serverbench-core = { path = "../serverbench-core" }
+libc.workspace = true

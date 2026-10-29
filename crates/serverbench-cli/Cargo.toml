@@ -1,0 +1,18 @@
+[package]
+name = "serverbench-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "serverbench"
+path = "src/main.rs"
+
+[dependencies]
+clap.workspace = true
+serde_json.workspace = true
+serverbench-core = { path = "../serverbench-core" }
+serverbench-system = { path = "../serverbench-system" }
+serverbench-score = { path = "../serverbench-score" }
+serverbench-report = { path = "../serverbench-report" }
+serverbench-survey = { path = "../serverbench-survey" }

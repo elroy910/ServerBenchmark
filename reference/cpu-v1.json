@@ -1,0 +1,14 @@
+{
+  "benchmark_schema_version": 1,
+  "contract": "cpu-v1-experimental-1",
+  "status": "experimental",
+  "index": 1000.0,
+  "throughput": {
+    "integer": 100000000.0,
+    "compression": 50000000.0,
+    "decompression": 300000000.0,
+    "hash": 150000000.0,
+    "data": 300000.0
+  },
+  "mixed_cycles_per_second": 200.0
+}

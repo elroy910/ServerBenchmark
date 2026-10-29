@@ -1,0 +1,9 @@
+[package]
+name = "serverbench-metrics"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+serverbench-core = { path = "../serverbench-core" }
+serverbench-system = { path = "../serverbench-system" }

@@ -1,0 +1,54 @@
+name: Build and verify Linux binaries
+on:
+  workflow_call:
+permissions:
+  contents: read
+jobs:
+  quality:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install pinned Rust
+        run: rustup toolchain install 1.85.1 --profile minimal --component rustfmt,clippy
+      - run: bash scripts/check.sh
+      - name: Check publishing scripts
+        run: |
+          bash -n scripts/package.sh scripts/check-release-version.sh scripts/prepare-release.sh scripts/publish-release.sh
+          bash scripts/test-release.sh
+      - name: Real quick benchmark
+        run: bash scripts/smoke.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: smoke-results
+          path: results/ci/
+          if-no-files-found: ignore
+  binaries:
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [x86_64-unknown-linux-gnu, x86_64-unknown-linux-musl, aarch64-unknown-linux-gnu, aarch64-unknown-linux-musl]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install pinned Rust and target
+        run: rustup toolchain install 1.85.1 --profile minimal --target ${{ matrix.target }}
+      - name: Install ARM GNU linker
+        if: matrix.target == 'aarch64-unknown-linux-gnu'
+        run: sudo apt-get update -qq && sudo apt-get install -y gcc-aarch64-linux-gnu
+      - run: bash scripts/package.sh ${{ matrix.target }}
+      - name: Validate native executable
+        if: startsWith(matrix.target, 'x86_64-')
+        run: target/${{ matrix.target }}/release/serverbench validate --json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.target }}
+          if-no-files-found: error
+          path: |
+            dist/*.tar.gz
+            dist/*.sha256
+            dist/serverbench-linux-*

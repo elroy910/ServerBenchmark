@@ -165,6 +165,29 @@ CPU usage covers allowed logical CPUs. RAM is the Linux system's `MemTotal - Mem
 
 Progress goes through a bounded nonblocking queue; slow SSH output does not block sampling. Use `--no-progress` to hide live lines, or `--quiet` to hide normal console output. JSON is still saved.
 
+For phase messages and the final result without repeated CPU/RAM/temperature lines:
+
+```bash
+./serverbench benchmark --quick --no-progress --label "Proxmox Ubuntu VM" --output results/vm-quick.json
+```
+
+Use a new output filename for each run. `--quiet` also hides the phase messages and final console summary. Currently `--verbose` adds executable/reference hashes; detailed live stats are enabled by default. A [planned compact progress mode](docs/plans/implementation-backlog.md#cli-follow-up--compact-progress-and-verbose-details) will make detailed live stats opt-in with `--verbose`.
+
+### Unknown fields inside a Proxmox/QEMU VM
+
+Missing optional observations do not invalidate a CPU benchmark. ServerBench reports the interfaces exposed to the guest; it does not query the Proxmox host.
+
+| Output | Meaning in the current version |
+|---|---|
+| Governor/current MHz/nominal MHz unknown | The corresponding guest CPUFreq sysfs files are absent, unreadable or not parseable. These fields are not inferred from the host CPU model. |
+| CPU temperature unknown | No supported readable CPU sensor was found in the guest. |
+| Container unknown | No recognized container marker was found. This is separate from detecting QEMU virtualization; it is not proof that no container exists. |
+| CPU quota / cgroup memory limit unknown | Legacy v1 cannot distinguish an unlimited setting from an unavailable/unreadable limit. Linux `cpu.max` and `memory.max` can contain `max`; this does not mean zero resources. |
+| Physical cores / sockets / SMT / NUMA | Guest-visible topology, which need not match the physical host or represent dedicated cores. |
+| Effective capacity 4.000 | Four guest CPU equivalents under the limits the detector could observe; not a guarantee of four exclusive host cores. |
+
+`Cgroup visibility: visible hierarchy` concerns guest-visible cgroup ancestry. It does not reveal host-side VM quotas, scheduling or resource contention. Guest `MemTotal`, available memory and effective headroom likewise describe memory visible inside the VM. See the Linux [CPUFreq](https://docs.kernel.org/admin-guide/pm/cpufreq.html) and [cgroup v2](https://docs.kernel.org/admin-guide/cgroup-v2.html) interfaces for the underlying field semantics.
+
 ## Survey a shared VPS
 
 ```bash

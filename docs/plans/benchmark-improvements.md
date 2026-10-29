@@ -23,6 +23,12 @@ Companions: [sequenced implementation backlog](implementation-backlog.md) and [r
 
 Implement compatibility and measurement validity before adding new normalized scores. Keep the existing v1 profile available and preserve historical readers. Preview results must be visibly uncalibrated.
 
+### Follow-up from the Proxmox/QEMU VM test
+
+Plan a compact default console view with phase/workload and elapsed/target time, without repeated resource columns. `--verbose` will select detailed live statistics; existing `--no-progress` will retain phase transitions and the final report, and `--quiet` will suppress routine output while results are still saved. This is a presentation change: collection, JSON and benchmark arithmetic remain identical. Today `--no-progress` already supplies phase-only output; `--verbose` currently adds hashes. The [CLI follow-up](implementation-backlog.md#cli-follow-up--compact-progress-and-verbose-details) defines the option matrix, implementation boundaries and acceptance tests.
+
+Unknown governor/frequency/temperature values are consistent with guest interfaces/sensors being unavailable; do not invent host readings. Legacy v1 also conflates unlimited and unreadable cgroup limits, so an `unknown` quota is not proof of either a cap or unlimited resources. PR 2 must preserve and explain the distinction using explicit availability/limit states. Guest topology/capacity and guest cgroup visibility must never be presented as proof of dedicated physical host resources. See the [VM field guide](../../README.md#unknown-fields-inside-a-proxmoxqemu-vm).
+
 ## 2. What the code currently does
 
 These are repository observations, not assumptions about a particular server.

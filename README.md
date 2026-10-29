@@ -197,6 +197,7 @@ Survey runs full benchmarks at absolute monotonic start slots with random schedu
 ## Fair comparisons, limits and privacy
 
 - Use the same release, mode and durations. Repeat full runs at different times and inspect the raw measurements.
+- Comparisons flag copied or relabelled runs as duplicates. Incompatible contracts suppress score differences; preview results remain explicitly uncalibrated.
 - Workers respect process affinity, cpusets and visible cgroup v1/v2 ancestor quotas. Fractional quotas are handled conservatively. Hidden host ancestors are reported as incomplete visibility.
 - Governor, frequency, topology, virtualization, NUMA and limits are recorded when available. Unknown facts stay unknown. ServerBench changes no system configuration.
 - A score is workload-specific. Say “scored 44.7% higher on ServerBench CPU schema 1,” rather than claiming that every application will run 44.7% faster.
@@ -221,6 +222,10 @@ bash scripts/package.sh aarch64-unknown-linux-musl
 Static musl builds use Rust's bundled linker. GNU ARM64 cross-builds need `aarch64-linux-gnu-gcc`. Build dependencies are not required on servers running the executable. Do not use `target-cpu=native` for generic comparable releases.
 
 The workspace separates CLI, core models, system detection, CPU workloads, runtime metrics, scoring, reporting and survey orchestration. See [Contributing](CONTRIBUTING.md), [Changelog](CHANGELOG.md) and [Publishing](docs/publishing.md).
+
+PR 0 adds [validated document contracts and regression fixtures](docs/result-contracts.md). The schema 2 preview is read-only groundwork; `benchmark` continues to use the existing v1 engine and scores.
+
+Planned benchmark work is documented in the [research and implementation design](docs/plans/benchmark-improvements.md), [ordered PR backlog](docs/plans/implementation-backlog.md) and [proposed data contracts](docs/plans/result-formats.md). Beyond PR 0 these describe future work; the documented release commands above remain the currently supported interface.
 
 ## Publish a GitHub release
 

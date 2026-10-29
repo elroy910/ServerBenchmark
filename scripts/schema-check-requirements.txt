@@ -1,0 +1,2 @@
+# Development/CI only. Never needed to install or run the benchmark executable.
+jsonschema==4.23.0

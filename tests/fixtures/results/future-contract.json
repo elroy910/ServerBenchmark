@@ -1,0 +1,11 @@
+{
+  "schema_version": 2,
+  "document_type": "benchmark",
+  "benchmark_schema_version": 3,
+  "benchmark_contract_id": "cpu-v3-future",
+  "protocol_id": "unknown",
+  "score_model_id": "unknown",
+  "scores": {
+    "cpu_index": 999999
+  }
+}

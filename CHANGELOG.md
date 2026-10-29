@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Add explicit legacy/preview document dispatch, validity, scope and build/workload/protocol identities.
+- Validate imported results before file comparison; suppress foreign/uncalibrated score differences.
+- Detect copied/relabelled runs with file/content fingerprints and preserve v1 golden scores.
+- Document the read-only schema 2 preview contract and sequenced improvement plan. V1 execution and scoring remain unchanged.
+
 ## 0.1.1
 
 - Show server labels and source filenames in reports and comparisons.

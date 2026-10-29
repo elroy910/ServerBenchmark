@@ -1,0 +1,79 @@
+{
+  "stable": {
+    "scores": {
+      "single": 5.114052520669134,
+      "multi": 10.228105041338267,
+      "per_vcpu": 5.114052520669134,
+      "average": 100.0,
+      "reliable": 100.0,
+      "cpu_index": 14.190114054640699,
+      "consistency": 100.0,
+      "consistency_label": "excellent",
+      "consistency_inputs": {
+        "coefficient_of_variation": 0.0,
+        "p10_to_median": 1.0,
+        "degradation_fraction": 0,
+        "mean_steal_percent": 0.0,
+        "outlier_fraction": 0.0
+      }
+    },
+    "reference_sha256": "8b4fdb4d2998f820e85799e7a1e2151e7fc6213fd228f6e2920aacd9722cda05"
+  },
+  "variable": {
+    "scores": {
+      "single": 5.114052520669134,
+      "multi": 10.228105041338267,
+      "per_vcpu": 5.114052520669134,
+      "average": 66.66666666666667,
+      "reliable": 25.0,
+      "cpu_index": 10.033925873846973,
+      "consistency": 29.76049786572801,
+      "consistency_label": "inconsistent",
+      "consistency_inputs": {
+        "coefficient_of_variation": 0.4677071733467427,
+        "p10_to_median": 0.3333333333333333,
+        "degradation_fraction": 0.75,
+        "mean_steal_percent": 5.0,
+        "outlier_fraction": 0.3333333333333333
+      }
+    },
+    "reference_sha256": "8b4fdb4d2998f820e85799e7a1e2151e7fc6213fd228f6e2920aacd9722cda05"
+  },
+  "compatibility": [
+    {
+      "change": "application_version",
+      "value": "0.1.99",
+      "compatible": true
+    },
+    {
+      "change": "build_target",
+      "value": "aarch64-unknown-linux-musl",
+      "compatible": true
+    },
+    {
+      "change": "compiler_version",
+      "value": "different",
+      "compatible": false
+    },
+    {
+      "change": "optimized_build",
+      "value": false,
+      "compatible": false
+    },
+    {
+      "change": "benchmark_mode",
+      "value": "full",
+      "compatible": false
+    },
+    {
+      "change": "contract",
+      "value": "future",
+      "compatible": false
+    },
+    {
+      "change": "reference_sha256",
+      "value": "0000000000000000000000000000000000000000000000000000000000000000",
+      "compatible": false
+    }
+  ]
+}

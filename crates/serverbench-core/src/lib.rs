@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 pub mod documents;
+pub mod series;
 pub mod v2;
 
 pub const SCHEMA_VERSION: u32 = 1;

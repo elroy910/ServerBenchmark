@@ -1,0 +1,70 @@
+{
+  "schema_version": 2,
+  "document_type": "repeat_series",
+  "application_version": "0.1.2",
+  "benchmark_schema_version": 1,
+  "benchmark_contract_id": "cpu-v1-experimental-1",
+  "protocol_id": "repeat-v1-sequential-1",
+  "score_model_id": null,
+  "score_status": "not_applicable",
+  "status": "incomplete",
+  "timestamp": "2026-01-01T00:00:00Z",
+  "payload": {
+    "requested_runs": 3,
+    "pause_seconds": "60",
+    "continue_on_error": false,
+    "options": {
+      "mode": "quick",
+      "durations": {
+        "idle_seconds": 5,
+        "warmup_seconds": 5,
+        "workload_seconds": 4,
+        "sustained_seconds": 30,
+        "sample_seconds": 1
+      },
+      "strict": false,
+      "metadata": {
+        "label": "Synthetic stable",
+        "provider": null,
+        "monthly_cost": null,
+        "currency": null,
+        "anonymous": true
+      }
+    },
+    "finished": false,
+    "attempts": [
+      {
+        "ordinal": 1,
+        "child_file": "series.runs/run-0001.json",
+        "requested": {
+          "mode": "quick",
+          "durations": {
+            "idle_seconds": 5,
+            "warmup_seconds": 5,
+            "workload_seconds": 4,
+            "sustained_seconds": 30,
+            "sample_seconds": 1
+          },
+          "strict": false,
+          "metadata": {
+            "label": "Synthetic stable",
+            "provider": null,
+            "monthly_cost": null,
+            "currency": null,
+            "anonymous": true
+          }
+        },
+        "started_at": "2026-01-01T00:00:00Z",
+        "finished_at": null,
+        "exit_code": null,
+        "status": "running",
+        "reason": null,
+        "exact_file_sha256": null,
+        "canonical_run_sha256": null,
+        "cohort_id": null
+      }
+    ],
+    "cohorts": []
+  },
+  "scores": null
+}

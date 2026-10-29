@@ -1,7 +1,8 @@
-use clap::{Args, Parser, Subcommand};
+use clap::{Args, Parser, Subcommand, ValueEnum};
 use serverbench_core::{Error, Metadata, Mode, Result};
 use serverbench_report::{compare_files, console, default_path, info, save_result, ProgressOutput};
-use serverbench_survey::{parse_duration, run, survey, validate, RunOptions, SurveyOptions};
+use serverbench_runner::single::run;
+use serverbench_survey::{parse_duration, survey, validate, RunOptions, SurveyOptions};
 use std::{path::PathBuf, process::ExitCode};
 
 #[derive(Parser)]
@@ -34,9 +35,24 @@ enum Command {
         options: BenchmarkArgs,
         #[arg(short, long)]
         output: Option<PathBuf>,
+        /// Run 1–100 sequential fresh processes; N=1 keeps the single JSON format.
+        #[arg(long,default_value_t=1,value_parser=clap::value_parser!(u32).range(1..=100))]
+        repeat: u32,
+        /// Fixed pause between repetitions; requires --repeat >= 2. Default: 60s.
+        #[arg(long,value_parser=duration_arg)]
+        repeat_pause: Option<u64>,
+        /// Finish remaining attempts after failures; the series still exits unsuccessfully.
+        #[arg(long)]
+        continue_on_error: bool,
     },
     /// Compare compatible result files; incompatible differences are suppressed.
-    Compare { a: PathBuf, b: PathBuf },
+    Compare {
+        a: PathBuf,
+        b: PathBuf,
+        /// Explicitly assume independent runs within stable cohorts for conditional intervals.
+        #[arg(long, value_enum)]
+        uncertainty: Option<Uncertainty>,
+    },
     /// Periodically run benchmarks and keep individual results plus a summary.
     Survey {
         #[command(flatten)]
@@ -58,6 +74,10 @@ enum Command {
         #[arg(long)]
         json: bool,
     },
+}
+#[derive(Clone, Copy, ValueEnum)]
+enum Uncertainty {
+    IndependentRuns,
 }
 #[derive(Args, Default)]
 struct BenchmarkArgs {
@@ -135,6 +155,9 @@ fn execute(cli: Cli) -> Result<()> {
     let command = cli.command.unwrap_or(Command::Benchmark {
         options: BenchmarkArgs::default(),
         output: None,
+        repeat: 1,
+        repeat_pause: None,
+        continue_on_error: false,
     });
     match command {
         Command::Info { json } => {
@@ -147,13 +170,86 @@ fn execute(cli: Cli) -> Result<()> {
                 }
             }
         }
-        Command::Benchmark { options, output } => {
+        Command::Benchmark {
+            options,
+            output,
+            repeat,
+            repeat_pause,
+            continue_on_error,
+        } => {
+            if repeat == 1 && (repeat_pause.is_some() || continue_on_error) {
+                return Err(Error::new(
+                    2,
+                    "--repeat-pause and --continue-on-error require --repeat >= 2",
+                ));
+            }
             let output = output.unwrap_or_else(default_path);
             if output.exists() {
                 return Err(Error::new(
                     2,
                     "output file already exists; choose a new path",
                 ));
+            }
+            if repeat > 1 {
+                use serverbench_core::series::RunSpec;
+                use serverbench_runner::{
+                    process::{signal_cancellation, ProcessExecutor},
+                    repeat::{run_repeat, RepeatOptions},
+                };
+                let run_options = options.run_options();
+                let spec = RunSpec {
+                    mode: run_options.mode,
+                    durations: run_options.durations()?,
+                    strict: run_options.strict,
+                    metadata: run_options.metadata,
+                };
+                let pause = repeat_pause.unwrap_or(60);
+                let estimated = spec.estimated_seconds(repeat, pause)?;
+                reporter.finish();
+                if !quiet {
+                    eprintln!("Repeat plan: {repeat} runs, {pause}s pauses; approximately {estimated}s plus initialization and batch tails.");
+                }
+                let (cancel, _signals) = signal_cancellation()?;
+                let document = run_repeat(
+                    &RepeatOptions {
+                        executable: std::env::current_exe()?,
+                        output: output.clone(),
+                        spec,
+                        count: repeat,
+                        pause_seconds: pause,
+                        continue_on_error,
+                        quiet,
+                        verbose,
+                        no_progress: cli.no_progress,
+                    },
+                    &mut ProcessExecutor,
+                    &cancel,
+                    |message| {
+                        if !quiet {
+                            eprintln!("{message}");
+                        }
+                    },
+                )?;
+                if !quiet {
+                    let loaded = serverbench_report::load_document(&output)?;
+                    print!(
+                        "{}",
+                        serverbench_report::series_console(serverbench_report::require_series(
+                            &loaded
+                        )?)
+                    );
+                    println!("\nSeries JSON: {}", output.display());
+                }
+                if document.status != serverbench_core::documents::Validity::Valid {
+                    return Err(Error::new(
+                        1,
+                        format!(
+                            "repeat series incomplete or unsuccessful; see {}",
+                            output.display()
+                        ),
+                    ));
+                }
+                return Ok(());
             }
             let result = run(&options.run_options(), |event| reporter.handle(event))?;
             save_result(&output, &result)?;
@@ -170,8 +266,12 @@ fn execute(cli: Cli) -> Result<()> {
                 );
             }
         }
-        Command::Compare { a, b } => {
-            let text = compare_files(&a, &b)?;
+        Command::Compare { a, b, uncertainty } => {
+            let text = if uncertainty.is_some() {
+                serverbench_report::compare_files_with_uncertainty(&a, &b, true)?
+            } else {
+                compare_files(&a, &b)?
+            };
             if !quiet {
                 print!("{text}");
             }
@@ -235,6 +335,21 @@ mod tests {
     use super::*;
     #[test]
     fn cli_validation() {
+        for args in [
+            vec!["serverbench", "benchmark"],
+            vec!["serverbench", "benchmark", "--repeat", "1"],
+        ] {
+            let c = Cli::try_parse_from(args).unwrap();
+            assert!(matches!(
+                c.command,
+                Some(Command::Benchmark {
+                    repeat: 1,
+                    repeat_pause: None,
+                    continue_on_error: false,
+                    ..
+                })
+            ));
+        }
         assert!(Cli::try_parse_from(["serverbench", "benchmark", "--quick", "--full"]).is_err());
         assert!(Cli::try_parse_from([
             "serverbench",

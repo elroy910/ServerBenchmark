@@ -38,4 +38,13 @@ for field, value in [
     invalid[field] = value
     if validator.is_valid(invalid):
         raise AssertionError(f"accepted invalid preview field: {field}")
-print("JSON Schema, preview fixture, score/type constraints and randomized u64 bounds passed.")
+series_schema=json.loads((ROOT / "schemas/repeat-series-v2.schema.json").read_text())
+Draft202012Validator.check_schema(series_schema)
+series_validator=Draft202012Validator(series_schema)
+series_fixture=json.loads((ROOT / "tests/fixtures/results/repeat-v1-incomplete.json").read_text())
+series_validator.validate(series_fixture)
+for field,value in [("scores",{}),("score_status","available"),("protocol_id","future")]:
+    invalid=copy.deepcopy(series_fixture);invalid[field]=value
+    if series_validator.is_valid(invalid):
+        raise AssertionError(f"accepted invalid repeat field: {field}")
+print("Preview/repeat JSON Schemas, fixtures, score/type constraints and randomized u64 bounds passed.")

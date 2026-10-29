@@ -1,6 +1,6 @@
 # Proposed result and service contracts
 
-This is the full design appendix for [benchmark-improvements.md](benchmark-improvements.md), not a measured result. PR 0 implements the read-only benchmark subset; see [implemented contracts](../result-contracts.md) and its JSON Schema. Series, study, richer telemetry and report payloads below remain future work.
+This is the full design appendix for [benchmark-improvements.md](benchmark-improvements.md), not a measured result. PR 0 implements read-only benchmark contracts; PR 1 adds [repeat series](../repeated-runs.md). See the implemented guides and JSON Schemas for their concrete scope. Study, richer telemetry and report payloads below remain future work.
 
 ## Format envelope
 

@@ -122,12 +122,7 @@ fn dispatch_never_guesses_foreign_payloads_into_v1() {
         json!({"schema_version":999,"document_type":"benchmark","scores":{"cpu_index":999}}),
         ReasonCode::UnsupportedSchema,
     );
-    for kind in [
-        "repeat_series",
-        "scaling_study",
-        "latency_study",
-        "comparison_report",
-    ] {
+    for kind in ["scaling_study", "latency_study", "comparison_report"] {
         unsupported(
             json!({"schema_version":2,"document_type":kind}),
             ReasonCode::NotImplemented,

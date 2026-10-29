@@ -1,6 +1,11 @@
 # Changelog
 
-## Unreleased
+## 0.1.2
+
+- Add sequential fresh-process repeats, atomic series manifests, interruption handling and original child results.
+- Add distinct-run/cohort statistics, series comparisons and explicitly requested conditional median/ratio intervals.
+- Keep survey attempts chronological and partition changed allocation/protocol cohorts.
+- Preserve the single-run v1 benchmark and scoring contract; copy detection excludes repeated evidence.
 
 - Add explicit legacy/preview document dispatch, validity, scope and build/workload/protocol identities.
 - Validate imported results before file comparison; suppress foreign/uncalibrated score differences.

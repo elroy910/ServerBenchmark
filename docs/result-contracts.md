@@ -1,6 +1,6 @@
 # Result contracts and document reader
 
-PR 0 adds read-only document contracts and regression protection. `benchmark` still executes CPU v1 and writes its original schema 1 JSON. There is no v2 execution flag, calibrated v2 score, repeat runner, scaling study, latency study or HTML exporter in this change.
+PR 0 adds read-only benchmark contracts and regression protection. PR 1 adds [repeat series](repeated-runs.md) and conditional analysis in application 0.1.2. A single `benchmark` still executes CPU v1 and writes its original schema 1 JSON. V2 execution/calibration, scaling/latency studies and HTML export remain planned.
 
 The [design appendix](plans/result-formats.md) describes later extensions. This document describes the implemented subset. The Rust models and reader are authoritative for semantic validation; the [preview JSON Schema](../schemas/benchmark-preview-v2.schema.json) describes its structural representation.
 
@@ -9,6 +9,7 @@ The [design appendix](plans/result-formats.md) describes later extensions. This 
 `serverbench_report::read_document(bytes)` and `load_document(path)` return one of:
 
 - `ReadOutcome::Supported`: a validated `StoredDocument`, `ComparisonKey`, exact file hash and canonical run hash.
+- `ReadOutcome::Series`: a typed repeat manifest, child verification state and verified runs/cohorts when loaded from a bundle path. Byte-only imports remain explicitly unresolved.
 - `ReadOutcome::Unsupported`: the parsed `DocumentHeader` and a structured reason. Measurement and score fields from this document are never trusted or displayed.
 - `Err` with code 4: malformed JSON or invalid data in a supported contract. File I/O failures retain code 1.
 
@@ -19,7 +20,8 @@ Core `decode_document` handles structural dispatch; the report reader additional
 | Schema 1, no `document_type`, known v1 contract/version | Original `BenchmarkResult`, original validator and scorer |
 | Schema 1, explicit `document_type: "benchmark"` | Same historical reader |
 | Schema 2, `benchmark`, known preview contract/protocol/build policy | Typed, validated preview; scores must be null |
-| Schema 2, `repeat_series`, `scaling_study`, `latency_study`, `comparison_report` | Recognized kind, `not_implemented`; payload support arrives in its planned PR |
+| Schema 2, known `repeat_series` contract/protocol | Typed repeat manifest; path imports verify child provenance and recompute summaries |
+| Schema 2, `scaling_study`, `latency_study`, `comparison_report` | Recognized kind, `not_implemented`; payload support arrives in its planned PR |
 | Unknown schema, kind, contract, protocol, score model or build policy | Explicit `unsupported_*` reason; no fallback |
 | Missing schema, null discriminator, duplicate JSON keys, invalid known payload | Validation error |
 
@@ -51,7 +53,7 @@ Legacy comparison keys preserve the existing decisions: result/benchmark schema,
 
 Preview keys include the exact contract, full execution protocol, workload manifests and approved build identity. Architecture can differ within a generic build policy; GNU and musl, compiler identities and dependency-lock fingerprints stay separate. Binary/source fingerprints remain provenance rather than requiring identical executables across architectures. Observable allocation is a separate signature for later run cohorts, not a requirement for comparing different servers. A compatible raw preview key still does not authorize normalized scores or percentage CPU Index comparisons.
 
-The score registry accepts a `StoredDocument` variant. Only `LegacyBenchmarkV1` invokes the unchanged v1 validator/calculation; `PreviewBenchmarkV2` returns `Uncalibrated` after validation. File comparison validates each supported input before deciding compatibility, including when inputs have different build settings. Known malformed scores are rejected rather than displayed.
+The score registry accepts a `StoredDocument` variant. Only `LegacyBenchmarkV1` invokes the unchanged v1 validator/calculation; `PreviewBenchmarkV2` returns `Uncalibrated` and `RepeatSeries` returns `NotApplicable` after validation. Series do not have a single-run comparison key/content fingerprint and never enter the scorer as synthetic benchmarks. File comparison validates each supported input before deciding compatibility, including when inputs have different build settings. Known malformed scores are rejected rather than displayed.
 
 Console comparison preserves v1 numeric output. Mixed, preview and unsupported inputs show identity/status and suppress score differences. Unknown score values are not rendered. Recognizing an unsupported file is a successful descriptive comparison; invalid known data still exits with validation failure.
 
@@ -78,4 +80,4 @@ python3 -m venv .tools/schema-check
 .tools/schema-check/bin/python scripts/check-contract-schema.py
 ```
 
-This optional development tool does not add a server/runtime dependency. No hardware benchmark is required to verify the reader. App version remains 0.1.1 until an explicit release; no released tag/assets are replaced by PR 0.
+This optional development tool does not add a server/runtime dependency. No hardware benchmark is required to verify the reader. PR 0 retained app version 0.1.1; PR 1 source advances it to 0.1.2. Publishing remains a separate explicit action and existing tags/assets stay immutable.

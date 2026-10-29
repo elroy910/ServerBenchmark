@@ -21,13 +21,13 @@ If `origin` already exists, inspect `git remote -v`; update it with `git remote 
 
 `.gitignore` excludes downloaded toolchains, build artifacts, local results, root `vps-*.json` copies and `.env` files. Review staged files before publishing; benchmark results are not project source.
 
-## Publish version 0.1.1
+## Publish version 0.1.2
 
 Commit all intended release changes before creating the tag:
 
 ```powershell
-git tag -a v0.1.1 -m "ServerBench 0.1.1"
-git push origin v0.1.1
+git tag -a v0.1.2 -m "ServerBench 0.1.2"
+git push origin v0.1.2
 ```
 
 The tag must match `[workspace.package].version` in `Cargo.toml`. Tag pushes trigger the Release workflow, which:
@@ -77,7 +77,7 @@ Published release assets are never replaced by the script. A failed upload can b
 ## Local release checks
 
 ```bash
-bash scripts/check-release-version.sh v0.1.1
+bash scripts/check-release-version.sh v0.1.2
 bash -n scripts/package.sh scripts/prepare-release.sh scripts/publish-release.sh
 bash scripts/package.sh x86_64-unknown-linux-musl
 bash scripts/package.sh aarch64-unknown-linux-musl

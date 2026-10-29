@@ -188,13 +188,27 @@ Missing optional observations do not invalidate a CPU benchmark. ServerBench rep
 
 `Cgroup visibility: visible hierarchy` concerns guest-visible cgroup ancestry. It does not reveal host-side VM quotas, scheduling or resource contention. Guest `MemTotal`, available memory and effective headroom likewise describe memory visible inside the VM. See the Linux [CPUFreq](https://docs.kernel.org/admin-guide/pm/cpufreq.html) and [cgroup v2](https://docs.kernel.org/admin-guide/cgroup-v2.html) interfaces for the underlying field semantics.
 
+## Repeat runs and compare series
+
+Application 0.1.2 source adds sequential fresh-process repetitions:
+
+```bash
+./serverbench benchmark --full --repeat 3 --repeat-pause 60s --no-progress \
+  --label "Server A" --output results/server-a-series.json
+./serverbench compare results/server-a-series.json results/server-b-series.json
+```
+
+Three full runs with default pauses take approximately **26m45s**, plus initialization. The manifest and sibling `server-a-series.runs/` directory contain incremental status and the original child results; copy both when moving results. Existing destinations are refused. `--repeat 1` preserves single-result behavior. `--continue-on-error` finishes later attempts while keeping a failed series unsuccessful.
+
+Summaries report distinct-run median/range/SD/CV/MAD and per-workload medians. Changed allocations form separate cohorts; copied results do not add repetitions. Optional `compare ... --uncertainty independent-runs` requests conditional statistical intervals under explicit assumptions; three runs do **not** provide a finite 95% median interval. Read the [repeat guide](docs/repeated-runs.md) for failures, cancellation, copying bundles and inferential limits. Download availability follows publication of application 0.1.2.
+
 ## Survey a shared VPS
 
 ```bash
 ./serverbench survey --duration 24h --interval 2h --jitter 5m --label "VPS Medium"
 ```
 
-Survey runs full benchmarks at absolute monotonic start slots with random scheduling jitter. Late slots are skipped rather than queued. Every completed result is saved immediately; an incremental `survey.json` summarizes CPU Index median/P10/P90/min/max/CV and sustained steal. Finished runs survive an interruption; the incomplete current run is not scored. A run started before the survey deadline may finish after it.
+Survey runs full benchmarks at absolute monotonic start slots with random scheduling jitter. Late slots are skipped rather than queued. Every completed result is saved immediately; incremental `survey.json` retains chronological records and descriptive allocation/protocol cohorts. With one unchanged cohort it also summarizes CPU Index median/P10/P90/min/max/CV and sustained steal. Changed cohorts suppress the pooled summary. Finished runs survive an interruption; the incomplete current run is not scored. A run started before the survey deadline may finish after it.
 
 ## More CLI examples
 
@@ -255,8 +269,8 @@ Planned benchmark work is documented in the [research and implementation design]
 Push the source to `https://github.com/elroy910/ServerBenchmark.git`, then push a matching version tag:
 
 ```bash
-git tag -a v0.1.1 -m "ServerBench 0.1.1"
-git push origin v0.1.1
+git tag -a v0.1.2 -m "ServerBench 0.1.2"
+git push origin v0.1.2
 ```
 
 GitHub Actions checks the version, runs quality/smoke tests, builds four Linux targets, verifies checksums and publishes the complete release. `wget` links become live when that workflow finishes. See [the publishing guide](docs/publishing.md) for first-time Git setup and later versions.

@@ -748,7 +748,7 @@ pub(crate) fn token(value: &str) -> Result<()> {
         "invalid portable identity token",
     )
 }
-fn timestamp(value: &str) -> Result<()> {
+pub(crate) fn timestamp(value: &str) -> Result<()> {
     let b = value.as_bytes();
     ensure(
         b.len() >= 20

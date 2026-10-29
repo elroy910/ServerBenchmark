@@ -1,0 +1,16 @@
+[package]
+name = "serverbench-runner"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+serverbench-core = { path = "../serverbench-core" }
+serverbench-report = { path = "../serverbench-report" }
+serverbench-analysis = { path = "../serverbench-analysis" }
+serverbench-survey = { path = "../serverbench-survey" }
+serde_json.workspace = true
+libc.workspace = true
+
+[dev-dependencies]
+serverbench-score = { path = "../serverbench-score" }

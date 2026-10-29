@@ -1,11 +1,13 @@
 use serde::Serialize;
 mod documents;
 mod progress;
+mod repeat;
 pub use documents::{
     distinct_run_count, duplicate_kind, load_document, read_document, DuplicateKind,
-    LoadedDocument, ReadOutcome,
+    LoadedDocument, LoadedSeries, ReadOutcome, SeriesRun,
 };
 pub use progress::{live_line, ProgressOutput, ProgressReporter};
+pub use repeat::{require_series, series_console};
 use serverbench_core::{BenchmarkResult, Result, SystemInfo};
 use sha2::{Digest, Sha256};
 use std::{
@@ -214,9 +216,27 @@ pub fn compare(a: &BenchmarkResult, b: &BenchmarkResult) -> Result<String> {
     compare_named(a, b, None, None)
 }
 pub fn compare_files(a: &Path, b: &Path) -> Result<String> {
+    compare_files_with_uncertainty(a, b, false)
+}
+pub fn compare_files_with_uncertainty(
+    a: &Path,
+    b: &Path,
+    independent_runs: bool,
+) -> Result<String> {
     use serverbench_core::documents::StoredDocument;
     let left = load_document(a)?;
     let right = load_document(b)?;
+    if independent_runs
+        || matches!(left, ReadOutcome::Series(_))
+        || matches!(right, ReadOutcome::Series(_))
+    {
+        let sources = format!(
+            "File A: {}\nFile B: {}\n",
+            display_text(a.file_name().and_then(|v| v.to_str()).unwrap_or("unknown")),
+            display_text(b.file_name().and_then(|v| v.to_str()).unwrap_or("unknown"))
+        );
+        return Ok(sources + &repeat::compare_runs(&left, &right, independent_runs)?);
+    }
     let file_a = a.file_name().and_then(|s| s.to_str());
     let file_b = b.file_name().and_then(|s| s.to_str());
     let duplicate = match (&left, &right) {
@@ -252,6 +272,13 @@ fn unscored_comparison(
     let mut out = String::new();
     for (name, result, file) in [("A", a, file_a), ("B", b, file_b)] {
         match result {
+            ReadOutcome::Series(s) => {
+                let _ = writeln!(
+                    out,
+                    "Server {name}: repeat series ({:?})",
+                    s.document.status
+                );
+            }
             ReadOutcome::Unsupported(d) => {
                 let _ = writeln!(
                     out,
@@ -269,6 +296,9 @@ fn unscored_comparison(
                 );
             }
             ReadOutcome::Supported(d) => match &d.document {
+                StoredDocument::RepeatSeries(_) => {
+                    out.push_str("Repeat series requires a resolved child bundle.\n");
+                }
                 StoredDocument::LegacyBenchmarkV1(r) => {
                     let _ = writeln!(
                         out,

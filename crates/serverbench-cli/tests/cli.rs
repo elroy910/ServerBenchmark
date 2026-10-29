@@ -46,3 +46,41 @@ fn missing_result_fails() {
         Some(1)
     );
 }
+
+#[test]
+fn repeat_options_are_checked_before_starting_work() {
+    for args in [
+        vec!["benchmark", "--repeat", "0"],
+        vec!["benchmark", "--repeat", "101"],
+        vec!["benchmark", "--repeat", "1", "--repeat-pause", "1s"],
+        vec!["benchmark", "--continue-on-error"],
+        vec!["benchmark", "--repeat", "2", "--repeat-pause", "0s"],
+    ] {
+        let result = cli().args(&args).output().unwrap();
+        assert_eq!(result.status.code(), Some(2), "{args:?}");
+    }
+    let help = cli().args(["benchmark", "--help"]).output().unwrap();
+    let help = String::from_utf8(help.stdout).unwrap();
+    assert!(help.contains("--repeat"));
+    assert!(help.contains("--continue-on-error"));
+    let version = cli().arg("--version").output().unwrap();
+    assert!(String::from_utf8(version.stdout)
+        .unwrap()
+        .contains(env!("CARGO_PKG_VERSION")));
+}
+#[test]
+fn conditional_comparison_on_single_runs_reports_insufficient_repeats() {
+    let root =
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../tests/fixtures/results");
+    let output = cli()
+        .arg("compare")
+        .arg(root.join("legacy-v1-stable.json"))
+        .arg(root.join("legacy-v1-variable.json"))
+        .args(["--uncertainty", "independent-runs"])
+        .output()
+        .unwrap();
+    assert!(output.status.success(), "{:?}", output.stderr);
+    let text = String::from_utf8(output.stdout).unwrap();
+    assert!(text.contains("insufficient_repeats"));
+    assert!(text.contains("cannot verify these assumptions"));
+}

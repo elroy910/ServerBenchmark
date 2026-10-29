@@ -1,0 +1,500 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ServerBench CPU v1 repeat series",
+  "description": "Structural storage schema. Rust validates state transitions and paths, resolves child files inside the bundle, verifies hashes/options/contracts, and recomputes all cohort summaries. Saved summaries are never trusted for comparison.",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "incomplete"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "payload": {
+            "properties": {
+              "finished": {
+                "const": false
+              }
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "payload": {
+            "properties": {
+              "finished": {
+                "const": true
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 2
+    },
+    "document_type": {
+      "const": "repeat_series"
+    },
+    "application_version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9_.:+ ()-][A-Za-z0-9_.:/+ ()-]*$(?![\\s\\S])"
+    },
+    "benchmark_schema_version": {
+      "const": 1
+    },
+    "benchmark_contract_id": {
+      "const": "cpu-v1-experimental-1"
+    },
+    "protocol_id": {
+      "const": "repeat-v1-sequential-1"
+    },
+    "score_model_id": {
+      "type": "null"
+    },
+    "score_status": {
+      "const": "not_applicable"
+    },
+    "status": {
+      "enum": [
+        "valid",
+        "incomplete",
+        "invalid"
+      ]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,9})?Z$(?![\\s\\S])"
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "requested_runs": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 100
+        },
+        "pause_seconds": {
+          "$ref": "#/$defs/counter"
+        },
+        "continue_on_error": {
+          "type": "boolean"
+        },
+        "options": {
+          "$ref": "#/$defs/spec"
+        },
+        "finished": {
+          "type": "boolean"
+        },
+        "attempts": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "$ref": "#/$defs/attempt"
+          }
+        },
+        "cohorts": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "$ref": "#/$defs/cohort"
+          }
+        }
+      },
+      "required": [
+        "requested_runs",
+        "pause_seconds",
+        "continue_on_error",
+        "options",
+        "finished",
+        "attempts",
+        "cohorts"
+      ]
+    },
+    "scores": {
+      "type": "null"
+    }
+  },
+  "required": [
+    "schema_version",
+    "document_type",
+    "application_version",
+    "benchmark_schema_version",
+    "benchmark_contract_id",
+    "protocol_id",
+    "score_model_id",
+    "score_status",
+    "status",
+    "timestamp",
+    "payload",
+    "scores"
+  ],
+  "$defs": {
+    "counter": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]{0,18}|1[0-7][0-9]{18}|18[0-3][0-9]{17}|184[0-3][0-9]{16}|1844[0-5][0-9]{15}|18446[0-6][0-9]{14}|184467[0-3][0-9]{13}|1844674[0-3][0-9]{12}|184467440[0-6][0-9]{10}|1844674407[0-2][0-9]{9}|18446744073[0-6][0-9]{8}|1844674407370[0-8][0-9]{6}|18446744073709[0-4][0-9]{5}|184467440737095[0-4][0-9]{4}|18446744073709550[0-9]{3}|18446744073709551[0-5][0-9]{2}|1844674407370955160[0-9]{1}|1844674407370955161[0-4]|18446744073709551615)$(?![\\s\\S])"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$(?![\\s\\S])"
+    },
+    "durations": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "idle_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 31536000
+        },
+        "warmup_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 31536000
+        },
+        "workload_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 31536000
+        },
+        "sustained_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 31536000
+        },
+        "sample_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 31536000
+        }
+      },
+      "required": [
+        "idle_seconds",
+        "warmup_seconds",
+        "workload_seconds",
+        "sustained_seconds",
+        "sample_seconds"
+      ]
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "enum": [
+            "quick",
+            "full",
+            "extended"
+          ]
+        },
+        "durations": {
+          "$ref": "#/$defs/durations"
+        },
+        "strict": {
+          "type": "boolean"
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "provider": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "monthly_cost": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "currency": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "anonymous": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "anonymous"
+          ]
+        }
+      },
+      "required": [
+        "mode",
+        "durations",
+        "strict",
+        "metadata"
+      ]
+    },
+    "attempt": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ordinal": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "child_file": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?!/)(?!.*[\\\\:\\u0000-\\u001f\\u007f])(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*//).+$(?![\\s\\S])"
+        },
+        "requested": {
+          "$ref": "#/$defs/spec"
+        },
+        "started_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,9})?Z$(?![\\s\\S])"
+        },
+        "finished_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,9})?Z$(?![\\s\\S])"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "exit_code": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "running",
+            "valid",
+            "failed",
+            "invalid",
+            "cancelled"
+          ]
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "enum": [
+                "spawn_failed",
+                "child_failed",
+                "invalid_result",
+                "options_mismatch",
+                "interrupted",
+                "duplicate_input"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "exact_file_sha256": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "canonical_run_sha256": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cohort_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "ordinal",
+        "child_file",
+        "requested",
+        "started_at",
+        "finished_at",
+        "exit_code",
+        "status",
+        "reason",
+        "exact_file_sha256",
+        "canonical_run_sha256",
+        "cohort_id"
+      ]
+    },
+    "statistics": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "median": {
+          "type": "number",
+          "minimum": 0
+        },
+        "minimum": {
+          "type": "number",
+          "minimum": 0
+        },
+        "maximum": {
+          "type": "number",
+          "minimum": 0
+        },
+        "mean": {
+          "type": "number",
+          "minimum": 0
+        },
+        "standard_deviation": {
+          "type": "number",
+          "minimum": 0
+        },
+        "coefficient_of_variation": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "median_absolute_deviation": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "count",
+        "median",
+        "minimum",
+        "maximum",
+        "mean",
+        "standard_deviation",
+        "coefficient_of_variation",
+        "median_absolute_deviation"
+      ]
+    },
+    "cohort": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cohort_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "comparison_key": {
+          "type": "object"
+        },
+        "allocation": {
+          "type": "object"
+        },
+        "distinct_runs": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "duplicate_runs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 99
+        },
+        "run_fingerprints": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sha256"
+          }
+        },
+        "metrics": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/statistics"
+          }
+        },
+        "single_workloads": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/statistics"
+          }
+        },
+        "multi_workloads": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/statistics"
+          }
+        }
+      },
+      "required": [
+        "cohort_id",
+        "comparison_key",
+        "allocation",
+        "distinct_runs",
+        "duplicate_runs",
+        "run_fingerprints",
+        "metrics",
+        "single_workloads",
+        "multi_workloads"
+      ]
+    }
+  }
+}

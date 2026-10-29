@@ -260,13 +260,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "serverbench-analysis"
+version = "0.1.2"
+dependencies = [
+ "serde",
+ "serde_json",
+ "serverbench-core",
+ "sha2",
+]
+
+[[package]]
 name = "serverbench-cli"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "clap",
  "serde_json",
  "serverbench-core",
  "serverbench-report",
+ "serverbench-runner",
  "serverbench-score",
  "serverbench-survey",
  "serverbench-system",
@@ -274,7 +285,7 @@ dependencies = [
 
 [[package]]
 name = "serverbench-core"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "serde",
  "serde_json",
@@ -283,7 +294,7 @@ dependencies = [
 
 [[package]]
 name = "serverbench-cpu"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "miniz_oxide",
  "serde",
@@ -296,7 +307,7 @@ dependencies = [
 
 [[package]]
 name = "serverbench-metrics"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "serverbench-core",
  "serverbench-system",
@@ -304,18 +315,32 @@ dependencies = [
 
 [[package]]
 name = "serverbench-report"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "serde",
  "serde_json",
+ "serverbench-analysis",
  "serverbench-core",
  "serverbench-score",
  "sha2",
 ]
 
 [[package]]
+name = "serverbench-runner"
+version = "0.1.2"
+dependencies = [
+ "libc",
+ "serde_json",
+ "serverbench-analysis",
+ "serverbench-core",
+ "serverbench-report",
+ "serverbench-score",
+ "serverbench-survey",
+]
+
+[[package]]
 name = "serverbench-score"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "serde",
  "serde_json",
@@ -325,9 +350,11 @@ dependencies = [
 
 [[package]]
 name = "serverbench-survey"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "serde",
+ "serde_json",
+ "serverbench-analysis",
  "serverbench-core",
  "serverbench-cpu",
  "serverbench-report",
@@ -337,7 +364,7 @@ dependencies = [
 
 [[package]]
 name = "serverbench-system"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "libc",
  "serverbench-core",

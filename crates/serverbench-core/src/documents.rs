@@ -147,6 +147,7 @@ pub struct UnsupportedDocument {
 pub enum StoredDocument {
     LegacyBenchmarkV1(Box<BenchmarkResult>),
     PreviewBenchmarkV2(Box<v2::Document>),
+    RepeatSeries(Box<crate::series::Document>),
 }
 #[derive(Debug, Clone)]
 pub enum DecodeOutcome {
@@ -234,6 +235,30 @@ pub fn decode_document(bytes: &[u8]) -> Result<DecodeOutcome> {
             Err(_) => return unsupported(ReasonCode::UnsupportedDocumentType),
         },
     };
+    if kind == DocumentType::RepeatSeries {
+        if header.benchmark_contract_id.as_deref() != Some(crate::CONTRACT)
+            || benchmark_schema_version != Some(crate::BENCHMARK_SCHEMA)
+        {
+            return unsupported(ReasonCode::UnsupportedContract);
+        }
+        if header.protocol_id.as_deref() != Some(crate::series::PROTOCOL) {
+            return unsupported(ReasonCode::UnsupportedProtocol);
+        }
+        if header.score_model_id.is_some() {
+            return unsupported(ReasonCode::UnsupportedScoreModel);
+        }
+        for field in ["score_model_id", "scores"] {
+            v2::ensure(
+                obj.contains_key(field),
+                "series requires explicit nullable score fields",
+            )?;
+        }
+        let series: crate::series::Document = serde_json::from_value(value)?;
+        series.validate()?;
+        return Ok(DecodeOutcome::Supported(StoredDocument::RepeatSeries(
+            Box::new(series),
+        )));
+    }
     if kind != DocumentType::Benchmark {
         return unsupported(ReasonCode::NotImplemented);
     }
@@ -322,6 +347,10 @@ impl ComparisonKey {
     }
     pub fn from_document(document: &StoredDocument) -> Result<Self> {
         match document {
+            StoredDocument::RepeatSeries(_) => Err(Error::new(
+                4,
+                "series has cohort comparison keys, not one benchmark key",
+            )),
             StoredDocument::LegacyBenchmarkV1(r) => Ok(Self::legacy(r)),
             StoredDocument::PreviewBenchmarkV2(r) => {
                 r.validate()?;
@@ -357,6 +386,9 @@ impl Fingerprints {
     /// Fingerprint v1 of a *validated* typed document; not proof of authenticity.
     pub fn new(bytes: &[u8], document: &StoredDocument) -> Result<Self> {
         let mut value = match document {
+            StoredDocument::RepeatSeries(_) => {
+                return Err(Error::new(4, "series is not an individual run"))
+            }
             StoredDocument::LegacyBenchmarkV1(r) => serde_json::to_value(r)?,
             StoredDocument::PreviewBenchmarkV2(r) => serde_json::to_value(r)?,
         };

@@ -16,3 +16,4 @@ serverbench-system = { path = "../serverbench-system" }
 serverbench-score = { path = "../serverbench-score" }
 serverbench-report = { path = "../serverbench-report" }
 serverbench-survey = { path = "../serverbench-survey" }
+serverbench-runner = { path = "../serverbench-runner" }

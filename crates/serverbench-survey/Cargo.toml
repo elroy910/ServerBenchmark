@@ -10,4 +10,8 @@ serverbench-system = { path = "../serverbench-system" }
 serverbench-cpu = { path = "../serverbench-cpu" }
 serverbench-score = { path = "../serverbench-score" }
 serverbench-report = { path = "../serverbench-report" }
+serverbench-analysis = { path = "../serverbench-analysis" }
 serde.workspace = true
+
+[dev-dependencies]
+serde_json.workspace = true

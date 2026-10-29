@@ -1,6 +1,6 @@
 # ServerBench benchmark improvements: research and implementation design
 
-**Status:** implementation-ready design. PR 0 is implemented; later PRs remain planned. See [implemented contracts](../result-contracts.md).  
+**Status:** PRs 0 and 1 are implemented; PRs 2–9 and compact progress remain planned. See [implemented contracts](../result-contracts.md) and the [repeat guide](../repeated-runs.md).
 **Prepared:** 29 October 2026.  
 **Audited baseline:** app 0.1.1, Git commit `2b78150c50762ed32edda40e693af8749196e539`, CPU contract `cpu-v1-experimental-1`.
 

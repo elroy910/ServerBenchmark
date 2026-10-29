@@ -15,12 +15,17 @@ pub const WEIGHTS: [f64; 3] = [0.35, 0.40, 0.25];
 pub enum ScoreDisposition {
     LegacyV1(Scores),
     Uncalibrated,
+    NotApplicable,
 }
 pub fn validate_document(
     document: &serverbench_core::documents::StoredDocument,
 ) -> Result<ScoreDisposition> {
     use serverbench_core::documents::StoredDocument;
     match document {
+        StoredDocument::RepeatSeries(document) => {
+            document.validate()?;
+            Ok(ScoreDisposition::NotApplicable)
+        }
         StoredDocument::LegacyBenchmarkV1(result) => {
             validate_result(result)?;
             Ok(ScoreDisposition::LegacyV1(result.scores.clone()))

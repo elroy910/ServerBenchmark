@@ -1,6 +1,6 @@
 # Benchmark improvements: implementation backlog
 
-**Sequenced delivery plan.** Based on app 0.1.1 at `2b78150c50762ed32edda40e693af8749196e539`. PR 0 is implemented on the current branch; see [implemented contracts](../result-contracts.md). PRs 1–9 remain planned. Read the [research/design](benchmark-improvements.md) and [result/service contracts](result-formats.md) before implementing those tasks. Proposed CLI options below are not currently supported.
+**Sequenced delivery plan.** Based on app 0.1.1 at `2b78150c50762ed32edda40e693af8749196e539`. PRs 0 and 1 are implemented; see [implemented contracts](../result-contracts.md) and [repeat runs](../repeated-runs.md). PRs 2–9 and the compact-progress follow-up remain planned. Future CLI options below must be introduced in their own PRs.
 
 ## Delivery rules
 
@@ -59,6 +59,8 @@ Tasks:
 **Current workaround:** `benchmark --no-progress` already keeps phase messages and results while hiding live statistic lines. Today `--verbose` adds hashes; it does not control whether live statistics appear.
 
 ## PR 1 — Repeat series and descriptive/inferential analysis
+
+**Implemented in app 0.1.2 source:** sequential child runner, incremental verifiable bundles, failure/cancellation states, duplicate-aware cohorts, descriptive summaries, explicit conditional intervals, CLI integration and cohort-aware survey summaries. The v1 engine and score arithmetic are unchanged. Native multi-machine calibration remains an external review/lab task; local functional smoke evidence is not calibration.
 
 **Depends on:** PR0. **Goal:** useful repeated measurements before changing the timed benchmark.
 
@@ -230,7 +232,7 @@ Tasks:
 
 ## Acceptance matrix
 
-T01–T04 are covered by PR 0's synthetic document regression suite and existing workload/reference tests. T05–T30 remain requirements for future tests/experiments; they have not been executed by PR 0.
+T01–T04 are covered by PR 0's regression suite. PR 1 adds automated T05–T08 lifecycle/statistics/cohort coverage and a local release smoke check. T09–T30 remain future tests/experiments; local functional checks are not calibration evidence.
 
 | ID | Test or experiment | Expected evidence |
 |---|---|---|

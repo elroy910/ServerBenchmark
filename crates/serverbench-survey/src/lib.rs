@@ -297,6 +297,8 @@ pub fn validate(expected_sha256: Option<&str>) -> Result<ValidationReport> {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SurveyEntry {
+    #[serde(default)]
+    pub cohort_id: Option<String>,
     pub timestamp: String,
     pub result_file: PathBuf,
     pub cpu_index: f64,
@@ -304,6 +306,10 @@ pub struct SurveyEntry {
 }
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SurveySummary {
+    #[serde(default)]
+    pub cohorts: Vec<serverbench_core::series::CohortSummary>,
+    #[serde(default)]
+    pub pooled_summary_available: bool,
     pub schema_version: u32,
     pub contract: String,
     pub benchmark_mode: Mode,
@@ -364,6 +370,8 @@ pub fn survey(
     fs::create_dir(&dir)?;
     let summary_path = dir.join("survey.json");
     let mut summary = SurveySummary {
+        cohorts: vec![],
+        pooled_summary_available: false,
         schema_version: 1,
         contract: serverbench_core::CONTRACT.into(),
         benchmark_mode: options.run.mode,
@@ -379,6 +387,7 @@ pub fn survey(
         failures: Vec::new(),
     };
     save_json(&summary_path, &summary, false)?;
+    let mut cohort_records = Vec::new();
     let start = Instant::now();
     let total = Duration::from_secs(options.duration);
     let interval = Duration::from_secs(options.interval);
@@ -409,7 +418,21 @@ pub fn survey(
             Ok(result) => {
                 let path = dir.join(format!("{}.json", unique_name("serverbench")));
                 save_result(&path, &result)?;
+                let serverbench_report::ReadOutcome::Supported(loaded) =
+                    serverbench_report::load_document(&path)?
+                else {
+                    return Err(Error::new(4, "new survey result cannot be revalidated"));
+                };
+                let record = serverbench_analysis::repeat::RunRecord::new(
+                    &serverbench_analysis::repeat::Observation {
+                        result: &result,
+                        fingerprints: &loaded.fingerprints,
+                    },
+                )?;
+                let cohort_id = record.cohort_id.clone();
+                cohort_records.push(record);
                 summary.runs.push(SurveyEntry {
+                    cohort_id: Some(cohort_id),
                     timestamp: result.timestamp.clone(),
                     result_file: path,
                     cpu_index: result.scores.cpu_index,
@@ -428,6 +451,7 @@ pub fn survey(
                     .flat_map(|r| r.sustained_steal.iter().copied())
                     .collect();
                 summary.steal = (!steal.is_empty()).then(|| statistics(&steal));
+                update_cohorts(&mut summary, &cohort_records)?;
             }
             Err(e) => {
                 summary
@@ -450,8 +474,25 @@ pub fn survey(
             ),
         ));
     }
-    progress(ProgressEvent::Message(&format!("Survey: {} runs; CPU Index median {:.1}, P10 {:.1}, P90 {:.1}, min {:.1}, max {:.1}, CV {:.2}%",summary.runs.len(),summary.cpu_index.median,summary.cpu_index.p10,summary.cpu_index.p90,summary.cpu_index.minimum,summary.cpu_index.maximum,summary.cpu_index.coefficient_of_variation*100.)));
+    if summary.pooled_summary_available {
+        progress(ProgressEvent::Message(&format!("Survey: {} runs; CPU Index median {:.1}, P10 {:.1}, P90 {:.1}, min {:.1}, max {:.1}, CV {:.2}%",summary.runs.len(),summary.cpu_index.median,summary.cpu_index.p10,summary.cpu_index.p90,summary.cpu_index.minimum,summary.cpu_index.maximum,summary.cpu_index.coefficient_of_variation*100.)));
+    } else {
+        progress(ProgressEvent::Message(&format!("Survey: {} chronological runs in {} allocation/protocol cohorts; pooled summary suppressed",summary.runs.len(),summary.cohorts.len())));
+    }
     Ok(summary_path)
+}
+fn update_cohorts(
+    summary: &mut SurveySummary,
+    records: &[serverbench_analysis::repeat::RunRecord],
+) -> Result<()> {
+    summary.cohorts = serverbench_analysis::repeat::summarize_records(records)?;
+    summary.pooled_summary_available =
+        summary.cohorts.len() == 1 && summary.cohorts[0].duplicate_runs == 0;
+    if !summary.pooled_summary_available {
+        summary.cpu_index = Statistics::default();
+        summary.steal = None;
+    }
+    Ok(())
 }
 pub fn parse_duration(input: &str) -> Result<u64> {
     let (number, multiplier) = match input.as_bytes().last() {
@@ -494,5 +535,76 @@ mod tests {
         for s in ["0", "-1", "NaN", "1.5h", "99999999999999999d", ""] {
             assert!(parse_duration(s).is_err());
         }
+    }
+    #[test]
+    fn changed_allocation_preserves_chronology_without_a_pooled_summary() {
+        use serverbench_analysis::repeat::{Observation, RunRecord};
+        use serverbench_core::documents::{Fingerprints, StoredDocument};
+        let a: BenchmarkResult = serde_json::from_str(include_str!(
+            "../../../tests/fixtures/results/legacy-v1-stable.json"
+        ))
+        .unwrap();
+        let mut b = a.clone();
+        b.timestamp = "2026-01-01T01:00:00Z".into();
+        b.system.cpu.quota_cpus = Some(1.5);
+        let records = [&a, &b]
+            .into_iter()
+            .map(|r| {
+                let fingerprints = Fingerprints::new(
+                    &serde_json::to_vec(r).unwrap(),
+                    &StoredDocument::LegacyBenchmarkV1(Box::new(r.clone())),
+                )
+                .unwrap();
+                RunRecord::new(&Observation {
+                    result: r,
+                    fingerprints: &fingerprints,
+                })
+                .unwrap()
+            })
+            .collect::<Vec<_>>();
+        let mut s = SurveySummary {
+            cohorts: vec![],
+            pooled_summary_available: true,
+            schema_version: 1,
+            contract: serverbench_core::CONTRACT.into(),
+            benchmark_mode: a.benchmark_mode,
+            durations: a.durations.clone(),
+            timestamp: a.timestamp.clone(),
+            requested_duration_seconds: 86400,
+            interval_seconds: 7200,
+            jitter_seconds: 0,
+            completed: true,
+            runs: [&a, &b]
+                .into_iter()
+                .enumerate()
+                .map(|(i, r)| SurveyEntry {
+                    cohort_id: Some(records[i].cohort_id.clone()),
+                    timestamp: r.timestamp.clone(),
+                    result_file: PathBuf::from(format!("run-{i}.json")),
+                    cpu_index: r.scores.cpu_index,
+                    sustained_steal: vec![],
+                })
+                .collect(),
+            cpu_index: statistics(&[a.scores.cpu_index, b.scores.cpu_index]),
+            steal: None,
+            failures: vec![],
+        };
+        update_cohorts(&mut s, &records).unwrap();
+        assert_eq!(s.cohorts.len(), 2);
+        assert!(!s.pooled_summary_available);
+        assert_eq!(s.cpu_index.count, 0);
+        assert_eq!(s.runs[0].timestamp, a.timestamp);
+        assert_eq!(s.runs[1].timestamp, b.timestamp);
+        let mut old = serde_json::to_value(&s).unwrap();
+        old.as_object_mut().unwrap().remove("cohorts");
+        old.as_object_mut()
+            .unwrap()
+            .remove("pooled_summary_available");
+        for entry in old["runs"].as_array_mut().unwrap() {
+            entry.as_object_mut().unwrap().remove("cohort_id");
+        }
+        let old: SurveySummary = serde_json::from_value(old).unwrap();
+        assert_eq!(old.runs.len(), 2);
+        assert!(old.cohorts.is_empty());
     }
 }

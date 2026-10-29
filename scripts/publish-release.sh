@@ -13,7 +13,9 @@ Standalone Linux CPU benchmarking for x86_64 and ARM64.
 
 Download serverbench-linux-x86_64 for Intel/AMD servers, or serverbench-linux-arm64 for ARM servers. The matching .sha256 file verifies the executable. Archives include the executable, README, license and documentation.
 
-CPU benchmark schema 1 remains experimental. Workloads, reference and scoring are unchanged from the initial CPU contract. See the README for wget installation, labels, live stats, surveys and comparing results.
+This release adds sequential fresh-process repeat runs, incremental result bundles, failure/cancellation handling, duplicate-aware cohort summaries and optional conditional uncertainty estimates. Use benchmark --repeat 3 to collect a series, then compare the saved series manifests. Copy each manifest together with its sibling .runs directory.
+
+CPU benchmark schema 1 remains experimental. Workloads, reference and scoring are unchanged from the initial CPU contract. See the README and docs/repeated-runs.md for wget installation, repeats, labels, live stats, surveys and comparisons. Detailed live statistics still follow the existing output policy; compact-by-default progress remains planned separately.
 EOF
 if gh release view "$tag" --repo "$GH_REPO" --json isDraft --jq '.isDraft' > "$directory/release-state.txt" 2>/dev/null; then
   if [[ "$(cat "$directory/release-state.txt")" != "true" ]]; then

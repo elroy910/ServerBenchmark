@@ -34,8 +34,8 @@ For **Intel/AMD x86_64**:
 ```bash
 mkdir -p ~/serverbench
 cd ~/serverbench
-wget https://github.com/elroy910/ServerBenchmark/releases/latest/download/serverbench-linux-x86_64
-wget https://github.com/elroy910/ServerBenchmark/releases/latest/download/serverbench-linux-x86_64.sha256
+wget -O serverbench-linux-x86_64 https://github.com/elroy910/ServerBenchmark/releases/latest/download/serverbench-linux-x86_64
+wget -O serverbench-linux-x86_64.sha256 https://github.com/elroy910/ServerBenchmark/releases/latest/download/serverbench-linux-x86_64.sha256
 sha256sum -c serverbench-linux-x86_64.sha256
 ```
 
@@ -55,8 +55,8 @@ chmod +x serverbench
 ```bash
 mkdir -p ~/serverbench
 cd ~/serverbench
-wget https://github.com/elroy910/ServerBenchmark/releases/latest/download/serverbench-linux-arm64
-wget https://github.com/elroy910/ServerBenchmark/releases/latest/download/serverbench-linux-arm64.sha256
+wget -O serverbench-linux-arm64 https://github.com/elroy910/ServerBenchmark/releases/latest/download/serverbench-linux-arm64
+wget -O serverbench-linux-arm64.sha256 https://github.com/elroy910/ServerBenchmark/releases/latest/download/serverbench-linux-arm64.sha256
 sha256sum -c serverbench-linux-arm64.sha256
 ```
 

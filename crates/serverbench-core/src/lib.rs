@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
+pub mod documents;
+pub mod v2;
 
 pub const SCHEMA_VERSION: u32 = 1;
 pub const BENCHMARK_VERSION: &str = "0.1.0";
@@ -63,7 +65,7 @@ pub enum Mode {
     Extended,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Durations {
     pub idle_seconds: u64,
     pub warmup_seconds: u64,

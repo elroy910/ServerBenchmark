@@ -1,0 +1,903 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/elroy910/ServerBenchmark/blob/main/schemas/benchmark-preview-v2.schema.json",
+  "title": "ServerBench read-only CPU v2 preview benchmark",
+  "description": "Structural schema. The Rust document reader additionally validates quota rationals, phase order, time coverage, scope references, counters, throughput, workload identities and complete status. No calibrated scores are permitted.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 2
+    },
+    "document_type": {
+      "const": "benchmark"
+    },
+    "application_version": {
+      "$ref": "#/$defs/token"
+    },
+    "benchmark_schema_version": {
+      "const": 2
+    },
+    "benchmark_contract_id": {
+      "const": "cpu-v2-preview-1"
+    },
+    "protocol_id": {
+      "const": "cpu-v2-preview/core-v1"
+    },
+    "score_model_id": {
+      "type": "null"
+    },
+    "score_status": {
+      "const": "uncalibrated"
+    },
+    "status": {
+      "enum": [
+        "valid",
+        "incomplete",
+        "invalid"
+      ]
+    },
+    "reason_codes": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "unsupported_schema",
+          "unsupported_document_type",
+          "unsupported_contract",
+          "unsupported_protocol",
+          "unsupported_score_model",
+          "unsupported_build_policy",
+          "not_implemented",
+          "not_supported",
+          "not_visible",
+          "permission_denied",
+          "malformed",
+          "not_applicable",
+          "counter_reset",
+          "incomplete_interval",
+          "interrupted",
+          "worker_failed",
+          "checksum_failed",
+          "allocation_changed",
+          "insufficient_resources"
+        ]
+      }
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,9})?Z$(?![\\s\\S])"
+    },
+    "build": {
+      "$ref": "#/$defs/build"
+    },
+    "allocation": {
+      "$ref": "#/$defs/allocation"
+    },
+    "metadata": {
+      "$ref": "#/$defs/metadata"
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/capability"
+      }
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "protocol": {
+          "$ref": "#/$defs/protocol"
+        },
+        "phases": {
+          "type": "array",
+          "maxItems": 12,
+          "items": {
+            "$ref": "#/$defs/phase"
+          }
+        }
+      },
+      "required": [
+        "protocol",
+        "phases"
+      ]
+    },
+    "scores": {
+      "type": "null"
+    }
+  },
+  "required": [
+    "schema_version",
+    "document_type",
+    "application_version",
+    "benchmark_schema_version",
+    "benchmark_contract_id",
+    "protocol_id",
+    "score_model_id",
+    "score_status",
+    "status",
+    "reason_codes",
+    "timestamp",
+    "build",
+    "allocation",
+    "metadata",
+    "capabilities",
+    "payload",
+    "scores"
+  ],
+  "$defs": {
+    "counter": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]{0,18}|1[0-7][0-9]{18}|18[0-3][0-9]{17}|184[0-3][0-9]{16}|1844[0-5][0-9]{15}|18446[0-6][0-9]{14}|184467[0-3][0-9]{13}|1844674[0-3][0-9]{12}|184467440[0-6][0-9]{10}|1844674407[0-2][0-9]{9}|18446744073[0-6][0-9]{8}|1844674407370[0-8][0-9]{6}|18446744073709[0-4][0-9]{5}|184467440737095[0-4][0-9]{4}|18446744073709550[0-9]{3}|18446744073709551[0-5][0-9]{2}|1844674407370955160[0-9]{1}|1844674407370955161[0-4]|18446744073709551615)$(?![\\s\\S])"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$(?![\\s\\S])"
+    },
+    "token": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9_.:+ ()-][A-Za-z0-9_.:/+ ()-]*$(?![\\s\\S])"
+    },
+    "logical_source": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9_.+()-]+$(?![\\s\\S])"
+    },
+    "scope": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "system_visible"
+            }
+          },
+          "required": [
+            "kind"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "allowed_cpu_set"
+            }
+          },
+          "required": [
+            "kind"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "process"
+            }
+          },
+          "required": [
+            "kind"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "worker"
+            },
+            "ordinal": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1048575
+            }
+          },
+          "required": [
+            "kind",
+            "ordinal"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "cgroup"
+            },
+            "ancestor": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1023
+            }
+          },
+          "required": [
+            "kind",
+            "ancestor"
+          ]
+        }
+      ]
+    },
+    "build": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "policy_id": {
+          "const": "rust-1.85.1-generic-v1"
+        },
+        "compiler_version": {
+          "const": "rustc 1.85.1 (4eb161250 2025-03-15)"
+        },
+        "target": {
+          "enum": [
+            "x86_64-unknown-linux-musl",
+            "aarch64-unknown-linux-musl",
+            "x86_64-unknown-linux-gnu",
+            "aarch64-unknown-linux-gnu"
+          ]
+        },
+        "optimization_level": {
+          "const": 3
+        },
+        "lto": {
+          "const": "thin"
+        },
+        "codegen_units": {
+          "const": 1
+        },
+        "panic": {
+          "const": "unwind"
+        },
+        "target_cpu": {
+          "const": "generic"
+        },
+        "extra_target_features": {
+          "type": "array",
+          "maxItems": 0
+        },
+        "dependency_lock_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "binary_sha256": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source_commit": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-fA-F]{40}$(?![\\s\\S])"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "policy_id",
+        "compiler_version",
+        "target",
+        "optimization_level",
+        "lto",
+        "codegen_units",
+        "panic",
+        "target_cpu",
+        "extra_target_features",
+        "dependency_lock_sha256"
+      ]
+    },
+    "allocation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "allowed_cpu_ids": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1048576,
+          "uniqueItems": true,
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1048576
+          }
+        },
+        "selected_cpu_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          }
+        },
+        "worker_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1048576
+        },
+        "quota": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "state": {
+                  "const": "limited"
+                },
+                "quota_us": {
+                  "$ref": "#/$defs/counter"
+                },
+                "period_us": {
+                  "$ref": "#/$defs/counter"
+                }
+              },
+              "required": [
+                "state",
+                "quota_us",
+                "period_us"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "state": {
+                  "const": "unlimited"
+                }
+              },
+              "required": [
+                "state"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "state": {
+                  "const": "unknown"
+                }
+              },
+              "required": [
+                "state"
+              ]
+            }
+          ]
+        },
+        "visible_cpu_equivalents": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "visibility_complete": {
+          "type": "boolean"
+        },
+        "placement_policy": {
+          "const": "physical-first-v1"
+        },
+        "topology_confidence": {
+          "enum": [
+            "exposed",
+            "unknown"
+          ]
+        },
+        "buffer_ownership": {
+          "const": "private-worker-first-touch-v1"
+        }
+      },
+      "required": [
+        "allowed_cpu_ids",
+        "selected_cpu_ids",
+        "worker_count",
+        "quota",
+        "visible_cpu_equivalents",
+        "visibility_complete",
+        "placement_policy",
+        "topology_confidence",
+        "buffer_ownership"
+      ]
+    },
+    "workload": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "workload_id": {
+          "enum": [
+            "integer",
+            "compression",
+            "decompression",
+            "hash",
+            "data",
+            "mixed"
+          ]
+        },
+        "algorithm_version": {
+          "const": 1
+        },
+        "dataset_sha256": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "input_bytes": {
+          "$ref": "#/$defs/counter"
+        },
+        "working_set_bytes": {
+          "$ref": "#/$defs/counter"
+        },
+        "units_per_batch": {
+          "$ref": "#/$defs/counter"
+        },
+        "unit": {
+          "enum": [
+            "integer_iterations/s",
+            "objects/s",
+            "bytes/s",
+            "mixed_cycles/s"
+          ]
+        },
+        "verification_policy": {
+          "const": "in-batch-known-answer-v1"
+        },
+        "isa_backend": {
+          "const": "portable-software-v1"
+        }
+      },
+      "required": [
+        "workload_id",
+        "algorithm_version",
+        "input_bytes",
+        "working_set_bytes",
+        "units_per_batch",
+        "unit",
+        "verification_policy",
+        "isa_backend"
+      ]
+    },
+    "protocol": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "protocol_id": {
+          "const": "cpu-v2-preview/core-v1"
+        },
+        "mode": {
+          "enum": [
+            "quick",
+            "full",
+            "extended"
+          ]
+        },
+        "durations": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "idle_ns": {
+              "$ref": "#/$defs/counter"
+            },
+            "warmup_ns": {
+              "$ref": "#/$defs/counter"
+            },
+            "workload_ns": {
+              "$ref": "#/$defs/counter"
+            },
+            "sustained_ns": {
+              "$ref": "#/$defs/counter"
+            },
+            "sample_ns": {
+              "$ref": "#/$defs/counter"
+            }
+          },
+          "required": [
+            "idle_ns",
+            "warmup_ns",
+            "workload_ns",
+            "sustained_ns",
+            "sample_ns"
+          ]
+        },
+        "timer_policy": {
+          "const": "monotonic-completion-v1"
+        },
+        "window_policy": {
+          "const": "worker-completion-1s-v1"
+        },
+        "placement_policy": {
+          "const": "physical-first-v1"
+        },
+        "instrumentation_mode": {
+          "const": "throughput"
+        },
+        "telemetry_policy": {
+          "const": "standard-v1"
+        }
+      },
+      "required": [
+        "protocol_id",
+        "mode",
+        "durations",
+        "timer_policy",
+        "window_policy",
+        "placement_policy",
+        "instrumentation_mode",
+        "telemetry_policy"
+      ]
+    },
+    "worker": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ordinal": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "cpu_id": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295
+        },
+        "status": {
+          "enum": [
+            "valid",
+            "incomplete",
+            "invalid"
+          ]
+        },
+        "completed_batches": {
+          "$ref": "#/$defs/counter"
+        },
+        "completed_units": {
+          "$ref": "#/$defs/counter"
+        },
+        "cpu_time_ns": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/counter"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "start_offset_ns": {
+          "$ref": "#/$defs/counter"
+        },
+        "finish_offset_ns": {
+          "$ref": "#/$defs/counter"
+        }
+      },
+      "required": [
+        "ordinal",
+        "cpu_id",
+        "status",
+        "completed_batches",
+        "completed_units",
+        "start_offset_ns",
+        "finish_offset_ns"
+      ]
+    },
+    "window": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "start_ns": {
+          "$ref": "#/$defs/counter"
+        },
+        "end_ns": {
+          "$ref": "#/$defs/counter"
+        },
+        "per_worker_units": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/counter"
+          }
+        },
+        "completed_units": {
+          "$ref": "#/$defs/counter"
+        }
+      },
+      "required": [
+        "start_ns",
+        "end_ns",
+        "per_worker_units",
+        "completed_units"
+      ]
+    },
+    "resource": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "start_ns": {
+          "$ref": "#/$defs/counter"
+        },
+        "end_ns": {
+          "$ref": "#/$defs/counter"
+        },
+        "scope": {
+          "$ref": "#/$defs/scope"
+        },
+        "cpu_utilization_percent": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "steal_percent": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "counters": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/counter"
+          }
+        }
+      },
+      "required": [
+        "start_ns",
+        "end_ns",
+        "scope",
+        "counters"
+      ]
+    },
+    "phase": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "phase_id": {
+          "$ref": "#/$defs/token"
+        },
+        "role": {
+          "enum": [
+            "warmup",
+            "single",
+            "multi",
+            "sustained"
+          ]
+        },
+        "status": {
+          "enum": [
+            "valid",
+            "incomplete",
+            "invalid",
+            "unavailable"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "unsupported_schema",
+              "unsupported_document_type",
+              "unsupported_contract",
+              "unsupported_protocol",
+              "unsupported_score_model",
+              "unsupported_build_policy",
+              "not_implemented",
+              "not_supported",
+              "not_visible",
+              "permission_denied",
+              "malformed",
+              "not_applicable",
+              "counter_reset",
+              "incomplete_interval",
+              "interrupted",
+              "worker_failed",
+              "checksum_failed",
+              "allocation_changed",
+              "insufficient_resources"
+            ]
+          }
+        },
+        "workload": {
+          "$ref": "#/$defs/workload"
+        },
+        "nominal_duration_ns": {
+          "$ref": "#/$defs/counter"
+        },
+        "elapsed_ns": {
+          "$ref": "#/$defs/counter"
+        },
+        "completed_batches": {
+          "$ref": "#/$defs/counter"
+        },
+        "completed_units": {
+          "$ref": "#/$defs/counter"
+        },
+        "total_throughput": {
+          "type": "number",
+          "minimum": 0
+        },
+        "checksums_valid": {
+          "type": "boolean"
+        },
+        "workers": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/worker"
+          }
+        },
+        "throughput_windows": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/window"
+          }
+        },
+        "tail_units": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/counter"
+          }
+        },
+        "resource_samples": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/resource"
+          }
+        }
+      },
+      "required": [
+        "phase_id",
+        "role",
+        "status",
+        "reason_codes",
+        "workload",
+        "nominal_duration_ns",
+        "elapsed_ns",
+        "completed_batches",
+        "completed_units",
+        "total_throughput",
+        "checksums_valid",
+        "workers",
+        "throughput_windows",
+        "tail_units",
+        "resource_samples"
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "provider": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "monthly_cost": {
+          "anyOf": [
+            {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "currency": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "anonymous": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "anonymous"
+      ]
+    },
+    "capability": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "availability": {
+              "const": "available"
+            },
+            "source": {
+              "$ref": "#/$defs/logical_source"
+            },
+            "scope": {
+              "$ref": "#/$defs/scope"
+            },
+            "value": {
+              "not": {
+                "type": "null"
+              }
+            }
+          },
+          "required": [
+            "availability",
+            "source",
+            "scope",
+            "value"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "availability": {
+              "const": "unavailable"
+            },
+            "source": {
+              "$ref": "#/$defs/logical_source"
+            },
+            "scope": {
+              "$ref": "#/$defs/scope"
+            },
+            "reason": {
+              "enum": [
+                "not_supported",
+                "not_visible",
+                "permission_denied",
+                "malformed",
+                "not_applicable"
+              ]
+            }
+          },
+          "required": [
+            "availability",
+            "source",
+            "scope",
+            "reason"
+          ]
+        }
+      ]
+    }
+  }
+}

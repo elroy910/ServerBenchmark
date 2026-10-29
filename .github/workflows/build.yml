@@ -13,6 +13,11 @@ jobs:
       - name: Install pinned Rust
         run: rustup toolchain install 1.85.1 --profile minimal --component rustfmt,clippy
       - run: bash scripts/check.sh
+      - name: Check result JSON Schema
+        run: |
+          python3 -m venv "$RUNNER_TEMP/serverbench-schema"
+          "$RUNNER_TEMP/serverbench-schema/bin/python" -m pip install -r scripts/schema-check-requirements.txt
+          "$RUNNER_TEMP/serverbench-schema/bin/python" scripts/check-contract-schema.py
       - name: Check publishing scripts
         run: |
           bash -n scripts/package.sh scripts/check-release-version.sh scripts/prepare-release.sh scripts/publish-release.sh

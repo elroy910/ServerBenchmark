@@ -1,0 +1,1233 @@
+{
+  "schema_version": 1,
+  "application_version": "0.1.0",
+  "benchmark_version": "0.1.0",
+  "benchmark_schema_version": 1,
+  "contract": "cpu-v1-experimental-1",
+  "baseline_status": "experimental",
+  "reference_sha256": "8b4fdb4d2998f820e85799e7a1e2151e7fc6213fd228f6e2920aacd9722cda05",
+  "dataset_sha256": "fed880d6c2ee7e7c6bdeaf14b99a18fbaa8172e5574fa00e05d35a69f79a4a61",
+  "binary_sha256": null,
+  "build_target": "x86_64-unknown-linux-musl",
+  "compiler_version": "rustc 1.85.1 (4eb161250 2025-03-15)",
+  "optimized_build": true,
+  "hash_implementation": "software SHA-256",
+  "timestamp": "2026-01-01T00:00:00Z",
+  "benchmark_mode": "quick",
+  "durations": {
+    "idle_seconds": 5,
+    "warmup_seconds": 5,
+    "workload_seconds": 4,
+    "sustained_seconds": 30,
+    "sample_seconds": 1
+  },
+  "system": {
+    "architecture": "x86_64",
+    "kernel": null,
+    "distribution": null,
+    "virtualized": null,
+    "hypervisor": null,
+    "containerized": null,
+    "container": null,
+    "memory_total_bytes": null,
+    "memory_available_bytes": null,
+    "memory_limit_bytes": null,
+    "memory_headroom_bytes": null,
+    "uptime_seconds": null,
+    "load_average": null,
+    "cpu": {
+      "model": null,
+      "logical_cpus": 2,
+      "affinity_cpus": [
+        0,
+        1
+      ],
+      "cpuset": null,
+      "quota_cpus": null,
+      "cgroup_version": null,
+      "cgroup_limits_complete": false,
+      "usable_cpus": 2,
+      "effective_capacity": 2.0,
+      "physical_cores": null,
+      "sockets": null,
+      "smt": null,
+      "numa_nodes": null,
+      "governor": null,
+      "current_mhz": null,
+      "nominal_mhz": null
+    }
+  },
+  "metadata": {
+    "label": "Synthetic stable",
+    "provider": null,
+    "monthly_cost": null,
+    "currency": null,
+    "anonymous": true
+  },
+  "warnings": [],
+  "idle_samples": [],
+  "single": {
+    "integer": {
+      "workload": "integer",
+      "unit": "integer_iterations/s",
+      "workers": 1,
+      "elapsed_seconds": 4.0,
+      "completed_units": 1310720,
+      "completed_batches": 40,
+      "total_throughput": 327680.0,
+      "throughput_per_vcpu": 327680.0,
+      "scaling_efficiency": null,
+      "throughput": {
+        "count": 4,
+        "average": 327680.0,
+        "median": 327680.0,
+        "p10": 327680.0,
+        "p50": 327680.0,
+        "p90": 327680.0,
+        "p95": 327680.0,
+        "p99": 327680.0,
+        "minimum": 327680,
+        "maximum": 327680,
+        "standard_deviation": 0.0,
+        "coefficient_of_variation": 0.0
+      },
+      "samples": [
+        {
+          "elapsed_seconds": 1.0,
+          "interval_seconds": 1.0,
+          "throughput": 327680,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        },
+        {
+          "elapsed_seconds": 2.0,
+          "interval_seconds": 1.0,
+          "throughput": 327680,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        },
+        {
+          "elapsed_seconds": 3.0,
+          "interval_seconds": 1.0,
+          "throughput": 327680,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        },
+        {
+          "elapsed_seconds": 4.0,
+          "interval_seconds": 1.0,
+          "throughput": 327680,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        }
+      ],
+      "affinity_applied": [
+        true
+      ],
+      "checksums_valid": true,
+      "worker_finish_skew_seconds": 0.0
+    },
+    "compression": {
+      "workload": "compression",
+      "unit": "bytes/s",
+      "workers": 1,
+      "elapsed_seconds": 4.0,
+      "completed_units": 2621440,
+      "completed_batches": 40,
+      "total_throughput": 655360.0,
+      "throughput_per_vcpu": 655360.0,
+      "scaling_efficiency": null,
+      "throughput": {
+        "count": 4,
+        "average": 655360.0,
+        "median": 655360.0,
+        "p10": 655360.0,
+        "p50": 655360.0,
+        "p90": 655360.0,
+        "p95": 655360.0,
+        "p99": 655360.0,
+        "minimum": 655360,
+        "maximum": 655360,
+        "standard_deviation": 0.0,
+        "coefficient_of_variation": 0.0
+      },
+      "samples": [
+        {
+          "elapsed_seconds": 1.0,
+          "interval_seconds": 1.0,
+          "throughput": 655360,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        },
+        {
+          "elapsed_seconds": 2.0,
+          "interval_seconds": 1.0,
+          "throughput": 655360,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        },
+        {
+          "elapsed_seconds": 3.0,
+          "interval_seconds": 1.0,
+          "throughput": 655360,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        },
+        {
+          "elapsed_seconds": 4.0,
+          "interval_seconds": 1.0,
+          "throughput": 655360,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        }
+      ],
+      "affinity_applied": [
+        true
+      ],
+      "checksums_valid": true,
+      "worker_finish_skew_seconds": 0.0
+    },
+    "decompression": {
+      "workload": "decompression",
+      "unit": "bytes/s",
+      "workers": 1,
+      "elapsed_seconds": 4.0,
+      "completed_units": 2621440,
+      "completed_batches": 40,
+      "total_throughput": 655360.0,
+      "throughput_per_vcpu": 655360.0,
+      "scaling_efficiency": null,
+      "throughput": {
+        "count": 4,
+        "average": 655360.0,
+        "median": 655360.0,
+        "p10": 655360.0,
+        "p50": 655360.0,
+        "p90": 655360.0,
+        "p95": 655360.0,
+        "p99": 655360.0,
+        "minimum": 655360,
+        "maximum": 655360,
+        "standard_deviation": 0.0,
+        "coefficient_of_variation": 0.0
+      },
+      "samples": [
+        {
+          "elapsed_seconds": 1.0,
+          "interval_seconds": 1.0,
+          "throughput": 655360,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        },
+        {
+          "elapsed_seconds": 2.0,
+          "interval_seconds": 1.0,
+          "throughput": 655360,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        },
+        {
+          "elapsed_seconds": 3.0,
+          "interval_seconds": 1.0,
+          "throughput": 655360,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        },
+        {
+          "elapsed_seconds": 4.0,
+          "interval_seconds": 1.0,
+          "throughput": 655360,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        }
+      ],
+      "affinity_applied": [
+        true
+      ],
+      "checksums_valid": true,
+      "worker_finish_skew_seconds": 0.0
+    },
+    "hash": {
+      "workload": "hash",
+      "unit": "bytes/s",
+      "workers": 1,
+      "elapsed_seconds": 4.0,
+      "completed_units": 2621440,
+      "completed_batches": 40,
+      "total_throughput": 655360.0,
+      "throughput_per_vcpu": 655360.0,
+      "scaling_efficiency": null,
+      "throughput": {
+        "count": 4,
+        "average": 655360.0,
+        "median": 655360.0,
+        "p10": 655360.0,
+        "p50": 655360.0,
+        "p90": 655360.0,
+        "p95": 655360.0,
+        "p99": 655360.0,
+        "minimum": 655360,
+        "maximum": 655360,
+        "standard_deviation": 0.0,
+        "coefficient_of_variation": 0.0
+      },
+      "samples": [
+        {
+          "elapsed_seconds": 1.0,
+          "interval_seconds": 1.0,
+          "throughput": 655360,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        },
+        {
+          "elapsed_seconds": 2.0,
+          "interval_seconds": 1.0,
+          "throughput": 655360,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        },
+        {
+          "elapsed_seconds": 3.0,
+          "interval_seconds": 1.0,
+          "throughput": 655360,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        },
+        {
+          "elapsed_seconds": 4.0,
+          "interval_seconds": 1.0,
+          "throughput": 655360,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        }
+      ],
+      "affinity_applied": [
+        true
+      ],
+      "checksums_valid": true,
+      "worker_finish_skew_seconds": 0.0
+    },
+    "data": {
+      "workload": "data",
+      "unit": "objects/s",
+      "workers": 1,
+      "elapsed_seconds": 4.0,
+      "completed_units": 10240,
+      "completed_batches": 40,
+      "total_throughput": 2560.0,
+      "throughput_per_vcpu": 2560.0,
+      "scaling_efficiency": null,
+      "throughput": {
+        "count": 4,
+        "average": 2560.0,
+        "median": 2560.0,
+        "p10": 2560.0,
+        "p50": 2560.0,
+        "p90": 2560.0,
+        "p95": 2560.0,
+        "p99": 2560.0,
+        "minimum": 2560,
+        "maximum": 2560,
+        "standard_deviation": 0.0,
+        "coefficient_of_variation": 0.0
+      },
+      "samples": [
+        {
+          "elapsed_seconds": 1.0,
+          "interval_seconds": 1.0,
+          "throughput": 2560,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        },
+        {
+          "elapsed_seconds": 2.0,
+          "interval_seconds": 1.0,
+          "throughput": 2560,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        },
+        {
+          "elapsed_seconds": 3.0,
+          "interval_seconds": 1.0,
+          "throughput": 2560,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        },
+        {
+          "elapsed_seconds": 4.0,
+          "interval_seconds": 1.0,
+          "throughput": 2560,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        }
+      ],
+      "affinity_applied": [
+        true
+      ],
+      "checksums_valid": true,
+      "worker_finish_skew_seconds": 0.0
+    }
+  },
+  "multi": {
+    "integer": {
+      "workload": "integer",
+      "unit": "integer_iterations/s",
+      "workers": 2,
+      "elapsed_seconds": 4.0,
+      "completed_units": 2621440,
+      "completed_batches": 80,
+      "total_throughput": 655360.0,
+      "throughput_per_vcpu": 327680.0,
+      "scaling_efficiency": null,
+      "throughput": {
+        "count": 4,
+        "average": 655360.0,
+        "median": 655360.0,
+        "p10": 655360.0,
+        "p50": 655360.0,
+        "p90": 655360.0,
+        "p95": 655360.0,
+        "p99": 655360.0,
+        "minimum": 655360,
+        "maximum": 655360,
+        "standard_deviation": 0.0,
+        "coefficient_of_variation": 0.0
+      },
+      "samples": [
+        {
+          "elapsed_seconds": 1.0,
+          "interval_seconds": 1.0,
+          "throughput": 655360,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        },
+        {
+          "elapsed_seconds": 2.0,
+          "interval_seconds": 1.0,
+          "throughput": 655360,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        },
+        {
+          "elapsed_seconds": 3.0,
+          "interval_seconds": 1.0,
+          "throughput": 655360,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        },
+        {
+          "elapsed_seconds": 4.0,
+          "interval_seconds": 1.0,
+          "throughput": 655360,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        }
+      ],
+      "affinity_applied": [
+        true,
+        true
+      ],
+      "checksums_valid": true,
+      "worker_finish_skew_seconds": 0.0
+    },
+    "compression": {
+      "workload": "compression",
+      "unit": "bytes/s",
+      "workers": 2,
+      "elapsed_seconds": 4.0,
+      "completed_units": 5242880,
+      "completed_batches": 80,
+      "total_throughput": 1310720.0,
+      "throughput_per_vcpu": 655360.0,
+      "scaling_efficiency": null,
+      "throughput": {
+        "count": 4,
+        "average": 1310720.0,
+        "median": 1310720.0,
+        "p10": 1310720.0,
+        "p50": 1310720.0,
+        "p90": 1310720.0,
+        "p95": 1310720.0,
+        "p99": 1310720.0,
+        "minimum": 1310720,
+        "maximum": 1310720,
+        "standard_deviation": 0.0,
+        "coefficient_of_variation": 0.0
+      },
+      "samples": [
+        {
+          "elapsed_seconds": 1.0,
+          "interval_seconds": 1.0,
+          "throughput": 1310720,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        },
+        {
+          "elapsed_seconds": 2.0,
+          "interval_seconds": 1.0,
+          "throughput": 1310720,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        },
+        {
+          "elapsed_seconds": 3.0,
+          "interval_seconds": 1.0,
+          "throughput": 1310720,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        },
+        {
+          "elapsed_seconds": 4.0,
+          "interval_seconds": 1.0,
+          "throughput": 1310720,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        }
+      ],
+      "affinity_applied": [
+        true,
+        true
+      ],
+      "checksums_valid": true,
+      "worker_finish_skew_seconds": 0.0
+    },
+    "decompression": {
+      "workload": "decompression",
+      "unit": "bytes/s",
+      "workers": 2,
+      "elapsed_seconds": 4.0,
+      "completed_units": 5242880,
+      "completed_batches": 80,
+      "total_throughput": 1310720.0,
+      "throughput_per_vcpu": 655360.0,
+      "scaling_efficiency": null,
+      "throughput": {
+        "count": 4,
+        "average": 1310720.0,
+        "median": 1310720.0,
+        "p10": 1310720.0,
+        "p50": 1310720.0,
+        "p90": 1310720.0,
+        "p95": 1310720.0,
+        "p99": 1310720.0,
+        "minimum": 1310720,
+        "maximum": 1310720,
+        "standard_deviation": 0.0,
+        "coefficient_of_variation": 0.0
+      },
+      "samples": [
+        {
+          "elapsed_seconds": 1.0,
+          "interval_seconds": 1.0,
+          "throughput": 1310720,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        },
+        {
+          "elapsed_seconds": 2.0,
+          "interval_seconds": 1.0,
+          "throughput": 1310720,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        },
+        {
+          "elapsed_seconds": 3.0,
+          "interval_seconds": 1.0,
+          "throughput": 1310720,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        },
+        {
+          "elapsed_seconds": 4.0,
+          "interval_seconds": 1.0,
+          "throughput": 1310720,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        }
+      ],
+      "affinity_applied": [
+        true,
+        true
+      ],
+      "checksums_valid": true,
+      "worker_finish_skew_seconds": 0.0
+    },
+    "hash": {
+      "workload": "hash",
+      "unit": "bytes/s",
+      "workers": 2,
+      "elapsed_seconds": 4.0,
+      "completed_units": 5242880,
+      "completed_batches": 80,
+      "total_throughput": 1310720.0,
+      "throughput_per_vcpu": 655360.0,
+      "scaling_efficiency": null,
+      "throughput": {
+        "count": 4,
+        "average": 1310720.0,
+        "median": 1310720.0,
+        "p10": 1310720.0,
+        "p50": 1310720.0,
+        "p90": 1310720.0,
+        "p95": 1310720.0,
+        "p99": 1310720.0,
+        "minimum": 1310720,
+        "maximum": 1310720,
+        "standard_deviation": 0.0,
+        "coefficient_of_variation": 0.0
+      },
+      "samples": [
+        {
+          "elapsed_seconds": 1.0,
+          "interval_seconds": 1.0,
+          "throughput": 1310720,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        },
+        {
+          "elapsed_seconds": 2.0,
+          "interval_seconds": 1.0,
+          "throughput": 1310720,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        },
+        {
+          "elapsed_seconds": 3.0,
+          "interval_seconds": 1.0,
+          "throughput": 1310720,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        },
+        {
+          "elapsed_seconds": 4.0,
+          "interval_seconds": 1.0,
+          "throughput": 1310720,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        }
+      ],
+      "affinity_applied": [
+        true,
+        true
+      ],
+      "checksums_valid": true,
+      "worker_finish_skew_seconds": 0.0
+    },
+    "data": {
+      "workload": "data",
+      "unit": "objects/s",
+      "workers": 2,
+      "elapsed_seconds": 4.0,
+      "completed_units": 20480,
+      "completed_batches": 80,
+      "total_throughput": 5120.0,
+      "throughput_per_vcpu": 2560.0,
+      "scaling_efficiency": null,
+      "throughput": {
+        "count": 4,
+        "average": 5120.0,
+        "median": 5120.0,
+        "p10": 5120.0,
+        "p50": 5120.0,
+        "p90": 5120.0,
+        "p95": 5120.0,
+        "p99": 5120.0,
+        "minimum": 5120,
+        "maximum": 5120,
+        "standard_deviation": 0.0,
+        "coefficient_of_variation": 0.0
+      },
+      "samples": [
+        {
+          "elapsed_seconds": 1.0,
+          "interval_seconds": 1.0,
+          "throughput": 5120,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        },
+        {
+          "elapsed_seconds": 2.0,
+          "interval_seconds": 1.0,
+          "throughput": 5120,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        },
+        {
+          "elapsed_seconds": 3.0,
+          "interval_seconds": 1.0,
+          "throughput": 5120,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        },
+        {
+          "elapsed_seconds": 4.0,
+          "interval_seconds": 1.0,
+          "throughput": 5120,
+          "cpu_utilization_percent": 100.0,
+          "steal_percent": 0.0,
+          "context_switches_per_second": null,
+          "load_average": null,
+          "frequency_mhz": null,
+          "cgroup_throttled_seconds": null
+        }
+      ],
+      "affinity_applied": [
+        true,
+        true
+      ],
+      "checksums_valid": true,
+      "worker_finish_skew_seconds": 0.0
+    }
+  },
+  "price_performance": null,
+  "sustained": {
+    "workload": "mixed",
+    "unit": "mixed_cycles/s",
+    "workers": 2,
+    "elapsed_seconds": 30.0,
+    "completed_units": 600,
+    "completed_batches": 600,
+    "total_throughput": 20.0,
+    "throughput_per_vcpu": 10.0,
+    "scaling_efficiency": null,
+    "throughput": {
+      "count": 30,
+      "average": 20.0,
+      "median": 20.0,
+      "p10": 20.0,
+      "p50": 20.0,
+      "p90": 20.0,
+      "p95": 20.0,
+      "p99": 20.0,
+      "minimum": 20,
+      "maximum": 20,
+      "standard_deviation": 0.0,
+      "coefficient_of_variation": 0.0
+    },
+    "samples": [
+      {
+        "elapsed_seconds": 1.0,
+        "interval_seconds": 1.0,
+        "throughput": 20,
+        "cpu_utilization_percent": 100.0,
+        "steal_percent": 0.0,
+        "context_switches_per_second": null,
+        "load_average": null,
+        "frequency_mhz": null,
+        "cgroup_throttled_seconds": null
+      },
+      {
+        "elapsed_seconds": 2.0,
+        "interval_seconds": 1.0,
+        "throughput": 20,
+        "cpu_utilization_percent": 100.0,
+        "steal_percent": 0.0,
+        "context_switches_per_second": null,
+        "load_average": null,
+        "frequency_mhz": null,
+        "cgroup_throttled_seconds": null
+      },
+      {
+        "elapsed_seconds": 3.0,
+        "interval_seconds": 1.0,
+        "throughput": 20,
+        "cpu_utilization_percent": 100.0,
+        "steal_percent": 0.0,
+        "context_switches_per_second": null,
+        "load_average": null,
+        "frequency_mhz": null,
+        "cgroup_throttled_seconds": null
+      },
+      {
+        "elapsed_seconds": 4.0,
+        "interval_seconds": 1.0,
+        "throughput": 20,
+        "cpu_utilization_percent": 100.0,
+        "steal_percent": 0.0,
+        "context_switches_per_second": null,
+        "load_average": null,
+        "frequency_mhz": null,
+        "cgroup_throttled_seconds": null
+      },
+      {
+        "elapsed_seconds": 5.0,
+        "interval_seconds": 1.0,
+        "throughput": 20,
+        "cpu_utilization_percent": 100.0,
+        "steal_percent": 0.0,
+        "context_switches_per_second": null,
+        "load_average": null,
+        "frequency_mhz": null,
+        "cgroup_throttled_seconds": null
+      },
+      {
+        "elapsed_seconds": 6.0,
+        "interval_seconds": 1.0,
+        "throughput": 20,
+        "cpu_utilization_percent": 100.0,
+        "steal_percent": 0.0,
+        "context_switches_per_second": null,
+        "load_average": null,
+        "frequency_mhz": null,
+        "cgroup_throttled_seconds": null
+      },
+      {
+        "elapsed_seconds": 7.0,
+        "interval_seconds": 1.0,
+        "throughput": 20,
+        "cpu_utilization_percent": 100.0,
+        "steal_percent": 0.0,
+        "context_switches_per_second": null,
+        "load_average": null,
+        "frequency_mhz": null,
+        "cgroup_throttled_seconds": null
+      },
+      {
+        "elapsed_seconds": 8.0,
+        "interval_seconds": 1.0,
+        "throughput": 20,
+        "cpu_utilization_percent": 100.0,
+        "steal_percent": 0.0,
+        "context_switches_per_second": null,
+        "load_average": null,
+        "frequency_mhz": null,
+        "cgroup_throttled_seconds": null
+      },
+      {
+        "elapsed_seconds": 9.0,
+        "interval_seconds": 1.0,
+        "throughput": 20,
+        "cpu_utilization_percent": 100.0,
+        "steal_percent": 0.0,
+        "context_switches_per_second": null,
+        "load_average": null,
+        "frequency_mhz": null,
+        "cgroup_throttled_seconds": null
+      },
+      {
+        "elapsed_seconds": 10.0,
+        "interval_seconds": 1.0,
+        "throughput": 20,
+        "cpu_utilization_percent": 100.0,
+        "steal_percent": 0.0,
+        "context_switches_per_second": null,
+        "load_average": null,
+        "frequency_mhz": null,
+        "cgroup_throttled_seconds": null
+      },
+      {
+        "elapsed_seconds": 11.0,
+        "interval_seconds": 1.0,
+        "throughput": 20,
+        "cpu_utilization_percent": 100.0,
+        "steal_percent": 0.0,
+        "context_switches_per_second": null,
+        "load_average": null,
+        "frequency_mhz": null,
+        "cgroup_throttled_seconds": null
+      },
+      {
+        "elapsed_seconds": 12.0,
+        "interval_seconds": 1.0,
+        "throughput": 20,
+        "cpu_utilization_percent": 100.0,
+        "steal_percent": 0.0,
+        "context_switches_per_second": null,
+        "load_average": null,
+        "frequency_mhz": null,
+        "cgroup_throttled_seconds": null
+      },
+      {
+        "elapsed_seconds": 13.0,
+        "interval_seconds": 1.0,
+        "throughput": 20,
+        "cpu_utilization_percent": 100.0,
+        "steal_percent": 0.0,
+        "context_switches_per_second": null,
+        "load_average": null,
+        "frequency_mhz": null,
+        "cgroup_throttled_seconds": null
+      },
+      {
+        "elapsed_seconds": 14.0,
+        "interval_seconds": 1.0,
+        "throughput": 20,
+        "cpu_utilization_percent": 100.0,
+        "steal_percent": 0.0,
+        "context_switches_per_second": null,
+        "load_average": null,
+        "frequency_mhz": null,
+        "cgroup_throttled_seconds": null
+      },
+      {
+        "elapsed_seconds": 15.0,
+        "interval_seconds": 1.0,
+        "throughput": 20,
+        "cpu_utilization_percent": 100.0,
+        "steal_percent": 0.0,
+        "context_switches_per_second": null,
+        "load_average": null,
+        "frequency_mhz": null,
+        "cgroup_throttled_seconds": null
+      },
+      {
+        "elapsed_seconds": 16.0,
+        "interval_seconds": 1.0,
+        "throughput": 20,
+        "cpu_utilization_percent": 100.0,
+        "steal_percent": 0.0,
+        "context_switches_per_second": null,
+        "load_average": null,
+        "frequency_mhz": null,
+        "cgroup_throttled_seconds": null
+      },
+      {
+        "elapsed_seconds": 17.0,
+        "interval_seconds": 1.0,
+        "throughput": 20,
+        "cpu_utilization_percent": 100.0,
+        "steal_percent": 0.0,
+        "context_switches_per_second": null,
+        "load_average": null,
+        "frequency_mhz": null,
+        "cgroup_throttled_seconds": null
+      },
+      {
+        "elapsed_seconds": 18.0,
+        "interval_seconds": 1.0,
+        "throughput": 20,
+        "cpu_utilization_percent": 100.0,
+        "steal_percent": 0.0,
+        "context_switches_per_second": null,
+        "load_average": null,
+        "frequency_mhz": null,
+        "cgroup_throttled_seconds": null
+      },
+      {
+        "elapsed_seconds": 19.0,
+        "interval_seconds": 1.0,
+        "throughput": 20,
+        "cpu_utilization_percent": 100.0,
+        "steal_percent": 0.0,
+        "context_switches_per_second": null,
+        "load_average": null,
+        "frequency_mhz": null,
+        "cgroup_throttled_seconds": null
+      },
+      {
+        "elapsed_seconds": 20.0,
+        "interval_seconds": 1.0,
+        "throughput": 20,
+        "cpu_utilization_percent": 100.0,
+        "steal_percent": 0.0,
+        "context_switches_per_second": null,
+        "load_average": null,
+        "frequency_mhz": null,
+        "cgroup_throttled_seconds": null
+      },
+      {
+        "elapsed_seconds": 21.0,
+        "interval_seconds": 1.0,
+        "throughput": 20,
+        "cpu_utilization_percent": 100.0,
+        "steal_percent": 0.0,
+        "context_switches_per_second": null,
+        "load_average": null,
+        "frequency_mhz": null,
+        "cgroup_throttled_seconds": null
+      },
+      {
+        "elapsed_seconds": 22.0,
+        "interval_seconds": 1.0,
+        "throughput": 20,
+        "cpu_utilization_percent": 100.0,
+        "steal_percent": 0.0,
+        "context_switches_per_second": null,
+        "load_average": null,
+        "frequency_mhz": null,
+        "cgroup_throttled_seconds": null
+      },
+      {
+        "elapsed_seconds": 23.0,
+        "interval_seconds": 1.0,
+        "throughput": 20,
+        "cpu_utilization_percent": 100.0,
+        "steal_percent": 0.0,
+        "context_switches_per_second": null,
+        "load_average": null,
+        "frequency_mhz": null,
+        "cgroup_throttled_seconds": null
+      },
+      {
+        "elapsed_seconds": 24.0,
+        "interval_seconds": 1.0,
+        "throughput": 20,
+        "cpu_utilization_percent": 100.0,
+        "steal_percent": 0.0,
+        "context_switches_per_second": null,
+        "load_average": null,
+        "frequency_mhz": null,
+        "cgroup_throttled_seconds": null
+      },
+      {
+        "elapsed_seconds": 25.0,
+        "interval_seconds": 1.0,
+        "throughput": 20,
+        "cpu_utilization_percent": 100.0,
+        "steal_percent": 0.0,
+        "context_switches_per_second": null,
+        "load_average": null,
+        "frequency_mhz": null,
+        "cgroup_throttled_seconds": null
+      },
+      {
+        "elapsed_seconds": 26.0,
+        "interval_seconds": 1.0,
+        "throughput": 20,
+        "cpu_utilization_percent": 100.0,
+        "steal_percent": 0.0,
+        "context_switches_per_second": null,
+        "load_average": null,
+        "frequency_mhz": null,
+        "cgroup_throttled_seconds": null
+      },
+      {
+        "elapsed_seconds": 27.0,
+        "interval_seconds": 1.0,
+        "throughput": 20,
+        "cpu_utilization_percent": 100.0,
+        "steal_percent": 0.0,
+        "context_switches_per_second": null,
+        "load_average": null,
+        "frequency_mhz": null,
+        "cgroup_throttled_seconds": null
+      },
+      {
+        "elapsed_seconds": 28.0,
+        "interval_seconds": 1.0,
+        "throughput": 20,
+        "cpu_utilization_percent": 100.0,
+        "steal_percent": 0.0,
+        "context_switches_per_second": null,
+        "load_average": null,
+        "frequency_mhz": null,
+        "cgroup_throttled_seconds": null
+      },
+      {
+        "elapsed_seconds": 29.0,
+        "interval_seconds": 1.0,
+        "throughput": 20,
+        "cpu_utilization_percent": 100.0,
+        "steal_percent": 0.0,
+        "context_switches_per_second": null,
+        "load_average": null,
+        "frequency_mhz": null,
+        "cgroup_throttled_seconds": null
+      },
+      {
+        "elapsed_seconds": 30.0,
+        "interval_seconds": 1.0,
+        "throughput": 20,
+        "cpu_utilization_percent": 100.0,
+        "steal_percent": 0.0,
+        "context_switches_per_second": null,
+        "load_average": null,
+        "frequency_mhz": null,
+        "cgroup_throttled_seconds": null
+      }
+    ],
+    "affinity_applied": [
+      true,
+      true
+    ],
+    "checksums_valid": true,
+    "worker_finish_skew_seconds": 0.0
+  },
+  "steal": {
+    "count": 30,
+    "average": 0.0,
+    "median": 0.0,
+    "p10": 0.0,
+    "p50": 0.0,
+    "p90": 0.0,
+    "p95": 0.0,
+    "p99": 0.0,
+    "minimum": 0,
+    "maximum": 0,
+    "standard_deviation": 0.0,
+    "coefficient_of_variation": 0
+  },
+  "scores": {
+    "single": 5.114052520669134,
+    "multi": 10.228105041338267,
+    "per_vcpu": 5.114052520669134,
+    "average": 100.0,
+    "reliable": 100.0,
+    "cpu_index": 14.190114054640699,
+    "consistency": 100.0,
+    "consistency_label": "excellent",
+    "consistency_inputs": {
+      "coefficient_of_variation": 0.0,
+      "p10_to_median": 1.0,
+      "degradation_fraction": 0,
+      "mean_steal_percent": 0.0,
+      "outlier_fraction": 0.0
+    }
+  }
+}

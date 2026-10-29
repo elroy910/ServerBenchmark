@@ -1,5 +1,10 @@
 use serde::Serialize;
+mod documents;
 mod progress;
+pub use documents::{
+    distinct_run_count, duplicate_kind, load_document, read_document, DuplicateKind,
+    LoadedDocument, ReadOutcome,
+};
 pub use progress::{live_line, ProgressOutput, ProgressReporter};
 use serverbench_core::{BenchmarkResult, Result, SystemInfo};
 use sha2::{Digest, Sha256};
@@ -98,7 +103,7 @@ pub fn save_result(path: &Path, r: &BenchmarkResult) -> Result<()> {
     save_json(path, r, false)
 }
 pub fn load_result(path: &Path) -> Result<BenchmarkResult> {
-    Ok(serde_json::from_reader(File::open(path)?)?)
+    documents::legacy_result(load_document(path)?)
 }
 fn opt<T: std::fmt::Display>(v: Option<T>) -> String {
     v.map(|s| s.to_string()).unwrap_or("unknown".into())
@@ -209,12 +214,83 @@ pub fn compare(a: &BenchmarkResult, b: &BenchmarkResult) -> Result<String> {
     compare_named(a, b, None, None)
 }
 pub fn compare_files(a: &Path, b: &Path) -> Result<String> {
-    compare_named(
-        &load_result(a)?,
-        &load_result(b)?,
-        a.file_name().and_then(|s| s.to_str()),
-        b.file_name().and_then(|s| s.to_str()),
-    )
+    use serverbench_core::documents::StoredDocument;
+    let left = load_document(a)?;
+    let right = load_document(b)?;
+    let file_a = a.file_name().and_then(|s| s.to_str());
+    let file_b = b.file_name().and_then(|s| s.to_str());
+    let duplicate = match (&left, &right) {
+        (ReadOutcome::Supported(a), ReadOutcome::Supported(b)) => duplicate_kind(a, b),
+        _ => None,
+    };
+    let mut out = match (&left, &right) {
+        (ReadOutcome::Supported(a), ReadOutcome::Supported(b)) => {
+            match (&a.document, &b.document) {
+                (StoredDocument::LegacyBenchmarkV1(a), StoredDocument::LegacyBenchmarkV1(b)) => {
+                    compare_named(a, b, file_a, file_b)?
+                }
+                _ => unscored_comparison(&left, &right, file_a, file_b),
+            }
+        }
+        _ => unscored_comparison(&left, &right, file_a, file_b),
+    };
+    if let Some(kind) = duplicate {
+        let _ = writeln!(
+            out,
+            "NOTICE: duplicate input ({kind:?}); one distinct run, not independent measurements."
+        );
+    }
+    Ok(out)
+}
+fn unscored_comparison(
+    a: &ReadOutcome,
+    b: &ReadOutcome,
+    file_a: Option<&str>,
+    file_b: Option<&str>,
+) -> String {
+    use serverbench_core::documents::StoredDocument;
+    let mut out = String::new();
+    for (name, result, file) in [("A", a, file_a), ("B", b, file_b)] {
+        match result {
+            ReadOutcome::Unsupported(d) => {
+                let _ = writeln!(
+                    out,
+                    "Server {name}: {}\n  Unsupported: {:?}; schema {}, type {}, contract {}",
+                    display_text(file.unwrap_or("unlabelled")),
+                    d.reason,
+                    d.header.schema_version,
+                    display_text(d.header.document_type.as_deref().unwrap_or("legacy")),
+                    display_text(
+                        d.header
+                            .benchmark_contract_id
+                            .as_deref()
+                            .unwrap_or("unknown")
+                    )
+                );
+            }
+            ReadOutcome::Supported(d) => match &d.document {
+                StoredDocument::LegacyBenchmarkV1(r) => {
+                    let _ = writeln!(
+                        out,
+                        "Server {name}: {}\n  Contract: {} (legacy v1)",
+                        result_name(r, file.unwrap_or("unlabelled")),
+                        r.contract
+                    );
+                }
+                StoredDocument::PreviewBenchmarkV2(r) => {
+                    let label = r
+                        .metadata
+                        .label
+                        .as_deref()
+                        .filter(|s| !s.trim().is_empty())
+                        .unwrap_or(file.unwrap_or("unlabelled"));
+                    let _=writeln!(out,"Server {name}: {}\n  Contract: {} / {}; status {:?}; uncalibrated, scores null",display_text(label),r.benchmark_contract_id,r.protocol_id,r.status);
+                }
+            },
+        }
+    }
+    out.push_str("WARNING: no comparable calibrated score pair; differences suppressed.\n");
+    out
 }
 fn compare_named(
     a: &BenchmarkResult,

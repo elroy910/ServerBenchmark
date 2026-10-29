@@ -1,5 +1,7 @@
 # Versiebeleid
 
+PR 0 voegt expliciete read-only documentdispatch toe. Schema 1 zonder `document_type` blijft het oorspronkelijke v1-model; de referentie, validator, rekenformules en meetlus veranderen niet. Schema 2 `benchmark` met `cpu-v2-preview-1` en `cpu-v2-preview/core-v1` gebruikt afzonderlijke typen en vereist `score_model_id: null`, `score_status: "uncalibrated"`, `scores: null`. Andere nieuwe documenttypen zijn herkenbaar maar nog niet geïmplementeerd. Onbekende schema's/contracten/protocollen/scoremodellen worden expliciet unsupported, nooit automatisch v1. Zie de [geïmplementeerde documentcontracten](result-contracts.md) voor buildbeleid, vergelijkbaarheid en versiegebonden contentfingerprints. Dit publiceert geen nieuwe release en wijzigt de default benchmark niet.
+
 Er zijn drie afzonderlijke versies: resultaatschema (`schema_version`), CPU-meetcontract (`benchmark_schema_version` plus `contract`) en applicatieversie. `benchmark_version` blijft gelijk bij zuivere CLI-bugfixes; de appversie mag veranderen. De huidige benchmarkversie is 0.1.0 en is experimenteel.
 
 Het meetcontract omvat datasets/generatoren, workloadalgoritmen, verificatieoverhead, vaste dependencyversies/Cargo.lock, compiler- en releaseprofielbeleid, eenheden, modes, sampling, statistiek, referentiewaarden, scoreformules en metriekbetekenis. Gebruik geen native CPU-optimalisatie bij een generiek releaseartifact.

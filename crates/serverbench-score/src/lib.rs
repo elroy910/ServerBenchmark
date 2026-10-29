@@ -9,6 +9,28 @@ pub const REFERENCE: &str = include_str!("../../../reference/cpu-v1.json");
 pub const REFERENCE_SHA256: &str =
     "8b4fdb4d2998f820e85799e7a1e2151e7fc6213fd228f6e2920aacd9722cda05";
 pub const WEIGHTS: [f64; 3] = [0.35, 0.40, 0.25];
+
+/// Registry dispatch is deliberately separate from the frozen v1 arithmetic.
+#[derive(Debug, Clone)]
+pub enum ScoreDisposition {
+    LegacyV1(Scores),
+    Uncalibrated,
+}
+pub fn validate_document(
+    document: &serverbench_core::documents::StoredDocument,
+) -> Result<ScoreDisposition> {
+    use serverbench_core::documents::StoredDocument;
+    match document {
+        StoredDocument::LegacyBenchmarkV1(result) => {
+            validate_result(result)?;
+            Ok(ScoreDisposition::LegacyV1(result.scores.clone()))
+        }
+        StoredDocument::PreviewBenchmarkV2(result) => {
+            result.validate()?;
+            Ok(ScoreDisposition::Uncalibrated)
+        }
+    }
+}
 #[derive(Deserialize)]
 pub struct Reference {
     pub benchmark_schema_version: u32,

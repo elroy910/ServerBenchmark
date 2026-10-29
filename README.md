@@ -6,11 +6,13 @@
 [![Release](https://img.shields.io/github/v/release/elroy910/ServerBenchmark)](https://github.com/elroy910/ServerBenchmark/releases/latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
+**Returning to the project? Read [Project status](STATUS.md)** for shipped milestones, pending work, verification and the next step. Release history is in the [Changelog](CHANGELOG.md).
+
 ServerBench is a standalone Rust CPU benchmark for dedicated servers, VMs and shared VPSes. It measures single-core, multi-core and sustained performance, alongside variation and CPU steal. Everything needed for a benchmark is embedded in one executable.
 
 **Linux x86_64 & ARM64 · No root · No runtime dependencies · Offline benchmarks · Local JSON results**
 
-> **Experimental CPU standard.** Application **0.1.1** uses CPU schema **1**, contract `cpu-v1-experimental-1`. The reference is fixed but not yet empirically calibrated or frozen as a public benchmark standard. Scores describe these workloads, not every application.
+> **Experimental CPU standard.** Application **0.1.2** uses CPU schema **1**, contract `cpu-v1-experimental-1`. The reference is fixed but not yet empirically calibrated or frozen as a public benchmark standard. Scores describe these workloads, not every application.
 
 ## Install on Ubuntu or another Linux server
 

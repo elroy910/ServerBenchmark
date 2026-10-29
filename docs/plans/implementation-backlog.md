@@ -1,5 +1,7 @@
 # Benchmark improvements: implementation backlog
 
+For the current delivery/release snapshot and where to resume, read [Project status](../../STATUS.md). This document supplies the detailed tasks and acceptance criteria.
+
 **Sequenced delivery plan.** Based on app 0.1.1 at `2b78150c50762ed32edda40e693af8749196e539`. PRs 0 and 1 are implemented; see [implemented contracts](../result-contracts.md) and [repeat runs](../repeated-runs.md). PRs 2–9 and the compact-progress follow-up remain planned. Future CLI options below must be introduced in their own PRs.
 
 ## Delivery rules

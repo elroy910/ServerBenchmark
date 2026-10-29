@@ -1,5 +1,7 @@
 # Contributing
 
+Start with [Project status](STATUS.md). When finishing a feature, merging it or publishing a release, update that page's review date, milestone state and validation evidence. Track **implemented**, **in main** and **released** separately; link the actual commit/release when available. Keep usage changes in the README/guides and release history in the changelog.
+
 Build with the pinned Rust toolchain and commit `Cargo.lock`:
 
 ```bash
